@@ -1,5 +1,10 @@
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Main extends JFrame {
 
@@ -11,6 +16,10 @@ public class Main extends JFrame {
 	private JRadioButton named = new JRadioButton("Named", false);
 	private JRadioButton described = new JRadioButton("Described", false);
 	String[] categorieList = { "Train", "Bus", "Underground" };
+
+	JFileChooser jfc = new JFileChooser();
+	FilValjare fv = null;
+	JScrollPane scroll = null;
 
 	private void fonster() {
 		setLayout(new BorderLayout());
@@ -28,7 +37,7 @@ public class Main extends JFrame {
 
 		JButton newKnapp = new JButton("New");
 		topPanel.add(newKnapp);
-		//visaKnapp.addActionListener(new VisaLyss());
+		newKnapp.addActionListener(new OpenLyss());
 
 		topPanel.add(named);
 		topPanel.add(described);
@@ -71,6 +80,31 @@ public class Main extends JFrame {
 		setLocation(300, 200);
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+	}
+
+	class OpenLyss implements ActionListener {
+		public void actionPerformed(ActionEvent ave){
+			FileFilter ff = new FileNameExtensionFilter("Bilder", "jpg", "png", "gif");
+			jfc.setFileFilter(ff);
+			//Sökväg på min dator så kommer inte funka hos dig
+			File mapp = new File("/Users/tildas/Pictures/bakgrundsbilder");
+			jfc.setCurrentDirectory(mapp);
+
+			int svar = jfc.showOpenDialog(Main.this);
+
+			if (svar != JFileChooser.APPROVE_OPTION)
+				return;
+			File fil = jfc.getSelectedFile();
+			String path = fil.getAbsolutePath();
+			if (fv != null)
+				remove(scroll);
+			fv = new FilValjare(path);
+			scroll = new JScrollPane(fv);
+			add(scroll, BorderLayout.CENTER);
+			pack();
+			validate();
+			repaint();
+		}
 	}
 
 	private void run() {
