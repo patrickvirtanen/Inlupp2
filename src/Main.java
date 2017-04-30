@@ -17,9 +17,9 @@ public class Main extends JFrame {
 	private JRadioButton described = new JRadioButton("Described", false);
 	String[] categorieList = { "Train", "Bus", "Underground" };
 
-	JFileChooser jfc = new JFileChooser();
-	FilValjare fv = null;
-	JScrollPane scroll = null;
+	private JFileChooser jfc = new JFileChooser();
+	private KartPanel fv = null;
+	private JScrollPane scroll = null;
 
 	private void fonster() {
 		setLayout(new BorderLayout());
@@ -94,13 +94,15 @@ public class Main extends JFrame {
 
 			int svar = jfc.showOpenDialog(Main.this);
 
-			if (svar != JFileChooser.APPROVE_OPTION)
+			if (svar != JFileChooser.APPROVE_OPTION) {
 				return;
+			}
 			File fil = jfc.getSelectedFile();
 			String path = fil.getAbsolutePath();
-			if (fv != null)
+			if (fv != null) {
 				remove(scroll);
-			fv = new FilValjare(path);
+			}
+			fv = new KartPanel(path);
 			scroll = new JScrollPane(fv);
 			add(scroll, BorderLayout.CENTER);
 

@@ -6,10 +6,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 
-public class FilValjare extends JPanel{
+public class KartPanel extends JPanel{
 	ImageIcon bild;
 
-	public FilValjare(String filnamn){
+	public KartPanel(String filnamn){
 		bild = new ImageIcon(filnamn);
 		int w = bild.getIconWidth();
 		int h = bild.getIconHeight();
