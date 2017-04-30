@@ -17,10 +17,17 @@ public class KartPanel extends JPanel{
 		setPreferredSize(new Dimension(w/scale, h/scale));
 		setMaximumSize(new Dimension(w/scale, h/scale));
 		setMinimumSize(new Dimension(w/scale, h/scale));
+
 	}
 
 	protected void paintComponent(Graphics g){
 		super.paintComponent(g);
 		g.drawImage(bild.getImage(), 0, 0, bild.getIconWidth()/scale, bild.getIconHeight()/scale, this);
 	}
+	
+//	public void getPosition(int x, int y){
+//		Position p = new Position(x, y);
+//		System.out.println(x);
+//		
+//	}
 }
