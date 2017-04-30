@@ -10,7 +10,7 @@ public class Main extends JFrame {
 
 	private JMenuBar mb = new JMenuBar();
 	private JMenu men = new JMenu("Archive");
-	private JMenuItem nytt = new JMenuItem("Nytt Fönster");
+	private JMenuItem nytt = new JMenuItem("New map");
 	private JMenuItem stäng = new JMenuItem("Stäng");
 
 	private JRadioButton named = new JRadioButton("Named", false);
@@ -26,6 +26,7 @@ public class Main extends JFrame {
 		setJMenuBar(mb);
 		mb.add(men);
 		men.add(nytt);
+		nytt.addActionListener(new OpenLyss());
 		men.add(stäng);
 
 		JPanel topPanel = new JPanel();
