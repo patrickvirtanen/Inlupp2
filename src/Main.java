@@ -3,6 +3,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -19,7 +20,8 @@ public class Main extends JFrame {
 
 	private JFileChooser jfc = new JFileChooser();
 	private KartPanel fv = null;
-	private JScrollPane scroll = null;
+	private JScrollPane scroll = new JScrollPane();
+	private JPanel mittPanel = new JPanel();
 
 	private void fonster() {
 		setLayout(new BorderLayout());
@@ -36,9 +38,12 @@ public class Main extends JFrame {
 		eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));
 		add(eastPanel, BorderLayout.EAST);
 
+		mittPanel.setLayout(new BorderLayout());
+		mittPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		add(mittPanel, BorderLayout.CENTER);
+
 		JButton newKnapp = new JButton("New");
 		topPanel.add(newKnapp);
-		newKnapp.addActionListener(new OpenLyss());
 
 		topPanel.add(named);
 		topPanel.add(described);
@@ -99,11 +104,11 @@ public class Main extends JFrame {
 			File fil = jfc.getSelectedFile();
 			String path = fil.getAbsolutePath();
 			if (fv != null) {
-				remove(scroll);
+				mittPanel.remove(scroll);
 			}
 			fv = new KartPanel(path);
 			scroll = new JScrollPane(fv);
-			add(scroll, BorderLayout.CENTER);
+			mittPanel.add(scroll, BorderLayout.CENTER);
 			pack();
 			validate();
 			repaint();
