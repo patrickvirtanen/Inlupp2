@@ -93,8 +93,8 @@ public class Main extends JFrame {
 			FileFilter ff = new FileNameExtensionFilter("Bilder", "jpg", "png", "gif");
 			jfc.setFileFilter(ff);
 			//Sökväg på min dator så kommer inte funka hos dig
-			//File mapp = new File("/Users/tildas/Pictures/bakgrundsbilder");
-			File mapp = new File("C:/Users/patri/Downloads");
+			File mapp = new File("/Users/tildas/Pictures/bakgrundsbilder");
+			//File mapp = new File("C:/Users/patri/Downloads");
 			jfc.setCurrentDirectory(mapp);
 
 			int svar = jfc.showOpenDialog(Main.this);
