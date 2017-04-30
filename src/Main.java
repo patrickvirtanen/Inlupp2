@@ -84,11 +84,12 @@ public class Main extends JFrame {
 	}
 
 	class OpenLyss implements ActionListener {
-		public void actionPerformed(ActionEvent ave){
+		public void actionPerformed(ActionEvent ave) {
 			FileFilter ff = new FileNameExtensionFilter("Bilder", "jpg", "png", "gif");
 			jfc.setFileFilter(ff);
 			//Sökväg på min dator så kommer inte funka hos dig
-			File mapp = new File("/Users/tildas/Pictures/bakgrundsbilder");
+			//File mapp = new File("/Users/tildas/Pictures/bakgrundsbilder");
+			File mapp = new File("C:/Users/patri/Downloads");
 			jfc.setCurrentDirectory(mapp);
 
 			int svar = jfc.showOpenDialog(Main.this);
@@ -102,6 +103,7 @@ public class Main extends JFrame {
 			fv = new FilValjare(path);
 			scroll = new JScrollPane(fv);
 			add(scroll, BorderLayout.CENTER);
+
 			pack();
 			validate();
 			repaint();
@@ -118,7 +120,7 @@ public class Main extends JFrame {
 	}
 
 	static {
-		Font f = new Font("Dialog", Font.BOLD, 20);
+		Font f = new Font("Dialog", Font.BOLD, 25);
 		String[] comps = { "Button", "Label", "RadioButton", "CheckBox", "ToggleButton", "TextArea", "TextField",
 				"Menu", "MenuItem", "FileChooser", "Dialog", "OptionPane" };
 		for (String s : comps) {

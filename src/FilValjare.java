@@ -13,13 +13,19 @@ public class FilValjare extends JPanel{
 		bild = new ImageIcon(filnamn);
 		int w = bild.getIconWidth();
 		int h = bild.getIconHeight();
-		setPreferredSize(new Dimension(w/6, h/6));
-		setMaximumSize(new Dimension(w/6, h/6));
-		setMinimumSize(new Dimension(w/6, h/6));
+		setPreferredSize(new Dimension(w, h));
+//		setMaximumSize(new Dimension(w/6, h/6));
+//		setMinimumSize(new Dimension(w/6, h/6)); //Ändrade dessa eftersom bilden blev förvrängd.
 	}
 
 	protected void paintComponent(Graphics g){
 		super.paintComponent(g);
 		g.drawImage(bild.getImage(), 0, 0, getWidth(), getHeight(), this);
 	}
+	
+//	public void getPosition(int x, int y){
+//		Position p = new Position(x, y);
+//		System.out.println(x);
+//		
+//	}
 }
