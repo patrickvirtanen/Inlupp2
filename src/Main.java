@@ -16,6 +16,7 @@ public class Main extends JFrame {
 
 	private JRadioButton named = new JRadioButton("Named", false);
 	private JRadioButton described = new JRadioButton("Described", false);
+	private ButtonGroup buttonGroup = new ButtonGroup();
 	String[] categorieList = { "Train", "Bus", "Underground" };
 
 	private JFileChooser jfc = new JFileChooser();
@@ -30,6 +31,8 @@ public class Main extends JFrame {
 		men.add(nytt);
 		nytt.addActionListener(new OpenLyss());
 		men.add(stäng);
+		buttonGroup.add(named);
+		buttonGroup.add(described);
 
 		JPanel topPanel = new JPanel();
 		add(topPanel, BorderLayout.NORTH);
@@ -114,6 +117,18 @@ public class Main extends JFrame {
 			pack();
 			validate();
 			repaint();
+		}
+	}
+
+	class NewLyss implements ActionListener {
+		public void actionPerformed(ActionEvent actionEvent) {
+			if (named.isSelected()) {
+				NameForm nameForm = new NameForm();
+			} else if (described.isSelected()) {
+				DescriptionForm desForm = new DescriptionForm();
+			} else {
+				JOptionPane.showMessageDialog(null, "Choose type!", "Wrong", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	}
 

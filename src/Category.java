@@ -3,21 +3,26 @@ import java.awt.*;
 /**
  * Created by tildas on 2017-04-30.
  */
-public class Category {
-	public enum Type {Bus, Underground, Train, None}
 
-	public static Color getCategoryColor(Type type) {
-		switch (type) {
+public enum Category {
+	// En kan se det som fyra konstruktorer (nedan), alltså har enum flera värden av typen
+	Bus, Train, Underground, None;
+
+	public Color getColor() {
+		switch(this) {
 			case Bus:
 				return Color.RED;
-			case Underground:
-				return Color.BLUE;
 			case Train:
 				return Color.GREEN;
+			case Underground:
+				return Color.BLUE;
 			default:
 				return Color.BLACK;
 		}
 	}
-	//Kan göras en liknande metod som ovan för beskrivning för kategori etc etc
-
 }
+
+// ovan kan sedan skapas med typ
+// Category luma = Category.Bus;
+// och färg kan då hämtas med
+// luma.getColor();

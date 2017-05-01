@@ -4,7 +4,7 @@
 public class DescribedPlace extends Place {
 	private String description;
 
-	public DescribedPlace (String description, String name, int coordinateX, int coordinateY, Category.Type category) {
+	public DescribedPlace (String description, String name, int coordinateX, int coordinateY, Category category) {
 		super(name, coordinateX, coordinateY, category);
 		this.description = description;
 

@@ -3,7 +3,7 @@
  */
 public class NamedPlace extends Place {
 
-	public NamedPlace (String name, int coordinateX, int coordinateY, Category.Type category) {
+	public NamedPlace (String name, int coordinateX, int coordinateY, Category category) {
 		super(name, coordinateX, coordinateY, category);
 	}
 }
