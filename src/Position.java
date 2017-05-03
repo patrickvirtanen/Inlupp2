@@ -7,29 +7,23 @@ import javax.swing.*;
 
 public class Position extends JComponent {
 
-	public Position(int x, int y){
-		setBounds(x, y, 50, 50);
-		addMouseListener(new MusLyss());
+	private int x;
+	private int y;
+
+	public Position(int x, int y) {
+		this.x = x;
+		this.y = y;
 	}
-	
-	class BildPosition extends Position{
-		private String filnamn;
-		private ImageIcon bild;
-		public BildPosition(int x, int y, String filnamn){
-			super(x,y);
-			this.filnamn = filnamn;
-			bild = new ImageIcon(filnamn);
-		}
-//		protected void visa(Graphics g){
-//			g.drawImage(bild.getImage(), 0, 0, getWidth(), getHeight(), this);
-//		}
+
+	public void setX(int x) {
+		this.x = x;
 	}
-	
-	class MusLyss extends MouseAdapter{
-		public void MouseCLicked(MouseEvent mev){
-			int x = mev.getX();
-			int y = mev.getY();
-			System.out.println("" + x + y);
-		}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public void getPosition() {
+		System.out.println(x + " " + y);
 	}
 }
