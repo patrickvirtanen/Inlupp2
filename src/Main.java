@@ -53,9 +53,8 @@ public class Main extends JFrame {
 
 		topPanel.add(named);
 		topPanel.add(described);
-		ButtonGroup bg = new ButtonGroup();
-		bg.add(named);
-		bg.add(described);
+		buttonGroup.add(named);
+		buttonGroup.add(described);
 
 		JTextField text = new JTextField("Search", 10);
 		topPanel.add(text);
@@ -160,7 +159,7 @@ public class Main extends JFrame {
 			} else {
 				JOptionPane.showMessageDialog(null, "Choose type!", "Wrong", JOptionPane.ERROR_MESSAGE);
 			}
-
+			buttonGroup.clearSelection();
 		}
 	}
 
