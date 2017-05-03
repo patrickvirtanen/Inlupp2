@@ -49,6 +49,7 @@ public class Main extends JFrame {
 
 		JButton newKnapp = new JButton("New");
 		topPanel.add(newKnapp);
+		newKnapp.addActionListener(new NewLyss());
 
 		topPanel.add(named);
 		topPanel.add(described);
@@ -138,11 +139,28 @@ public class Main extends JFrame {
 		public void actionPerformed(ActionEvent actionEvent) {
 			if (named.isSelected()) {
 				NameForm nameForm = new NameForm();
+				while (true) {
+					int test = JOptionPane.showConfirmDialog(null, nameForm, "New", JOptionPane.OK_CANCEL_OPTION);
+					if (test == 2 || test == -1) {
+						break;
+					}
+					if (nameForm.getName() == null || nameForm.getName().equals("")) {
+						JOptionPane.showMessageDialog(null, "Add a name", "Wrong", JOptionPane.ERROR_MESSAGE);
+						continue;
+					}
+
+					String name = nameForm.getName();
+
+					//Place aPlace = new Place(name, xx, yy, cat);
+
+					break;
+				}
 			} else if (described.isSelected()) {
 				DescriptionForm desForm = new DescriptionForm();
 			} else {
 				JOptionPane.showMessageDialog(null, "Choose type!", "Wrong", JOptionPane.ERROR_MESSAGE);
 			}
+
 		}
 	}
 

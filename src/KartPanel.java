@@ -11,7 +11,11 @@ import java.io.*;
 
 public class KartPanel extends JPanel{
 	ImageIcon bild;
+<<<<<<< HEAD
 	int scale = 1;
+=======
+	int scale = 2;
+>>>>>>> ae5fe6c2bb24e73992168be9bac99ccaeb97a69f
 
 	public KartPanel(String filnamn){
 		bild = new ImageIcon(filnamn);
