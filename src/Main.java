@@ -1,6 +1,5 @@
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.File;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -23,6 +22,8 @@ public class Main extends JFrame {
 	private KartPanel fv = null;
 	private JScrollPane scroll = new JScrollPane();
 	private JPanel mittPanel = new JPanel();
+	
+	
 
 	private void fonster() {
 		setLayout(new BorderLayout());
@@ -30,6 +31,7 @@ public class Main extends JFrame {
 		mb.add(men);
 		men.add(nytt);
 		nytt.addActionListener(new OpenLyss());
+		nytt.addMouseListener(new MusLyss());
 		men.add(stäng);
 		buttonGroup.add(named);
 		buttonGroup.add(described);
@@ -111,8 +113,11 @@ public class Main extends JFrame {
 				mittPanel.remove(scroll);
 			}
 			fv = new KartPanel(path);
+			fv.addMouseListener(new MusLyss());
 			scroll = new JScrollPane(fv);
 			mittPanel.add(scroll, BorderLayout.CENTER);
+			
+			
 
 			pack();
 			validate();
@@ -120,6 +125,15 @@ public class Main extends JFrame {
 		}
 	}
 
+	class MusLyss extends MouseAdapter{
+		@Override
+		public void mouseClicked(MouseEvent e){
+			int x = e.getX();
+			int y = e.getY();
+			System.out.println(x + " " + y);
+			
+		}
+	}
 	class NewLyss implements ActionListener {
 		public void actionPerformed(ActionEvent actionEvent) {
 			if (named.isSelected()) {
