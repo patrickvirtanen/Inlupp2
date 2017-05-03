@@ -8,7 +8,7 @@ import java.io.*;
 
 public class KartPanel extends JPanel{
 	ImageIcon bild;
-	int scale = 3;
+	int scale = 2;
 
 	public KartPanel(String filnamn){
 		bild = new ImageIcon(filnamn);
