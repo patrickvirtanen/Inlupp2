@@ -18,26 +18,26 @@ public class Main extends JFrame {
 	private ButtonGroup buttonGroup = new ButtonGroup();
 	String[] categorieList = { "Train", "Bus", "Underground" };
 
+	JPanel topPanel;
 	private JFileChooser jfc = new JFileChooser();
 	private KartPanel fv = null;
 	private JScrollPane scroll = new JScrollPane();
 	private JPanel mittPanel = new JPanel();
 	
-	
 
 	private void fonster() {
 		setLayout(new BorderLayout());
+		addComponentListener(new ResizeLyss());
 		setJMenuBar(mb);
 		mb.add(men);
 		men.add(nytt);
 		nytt.addActionListener(new OpenLyss());
 		nytt.addMouseListener(new MusLyss());
 		men.add(stäng);
-		buttonGroup.add(named);
-		buttonGroup.add(described);
 
-		JPanel topPanel = new JPanel();
+		topPanel = new JPanel();
 		add(topPanel, BorderLayout.NORTH);
+
 
 		JPanel eastPanel = new JPanel();
 		eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));
@@ -45,6 +45,7 @@ public class Main extends JFrame {
 
 		mittPanel.setLayout(new BorderLayout());
 		mittPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+
 		add(mittPanel, BorderLayout.CENTER);
 
 		JButton newKnapp = new JButton("New");
@@ -87,10 +88,18 @@ public class Main extends JFrame {
 		JButton hidecat = new JButton("Hide Categorie");
 		eastPanel.add(hidecat);
 
-		setSize(1000, 300);
+		//setSize(1000, 300);
+		pack();
 		setLocation(300, 200);
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+	}
+
+	class ResizeLyss extends ComponentAdapter {
+		public void componentResized (ComponentEvent cve) {
+			topPanel.revalidate();
+			revalidate();
+		}
 	}
 
 	class OpenLyss implements ActionListener {
@@ -116,10 +125,8 @@ public class Main extends JFrame {
 			fv.addMouseListener(new MusLyss());
 			scroll = new JScrollPane(fv);
 			mittPanel.add(scroll, BorderLayout.CENTER);
-			
-			
 
-			pack();
+			//pack();
 			validate();
 			repaint();
 		}
