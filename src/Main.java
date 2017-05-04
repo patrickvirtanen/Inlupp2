@@ -36,10 +36,11 @@ public class Main extends JFrame {
 
 		topPanel = new JPanel();
 		add(topPanel, BorderLayout.NORTH);
-
+		topPanel.setLayout(new WrapLayout(FlowLayout.RIGHT));
 
 		JPanel eastPanel = new JPanel();
 		eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));
+		eastPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		add(eastPanel, BorderLayout.EAST);
 
 		mittPanel.setLayout(new BorderLayout());
@@ -87,9 +88,9 @@ public class Main extends JFrame {
 		JButton hidecat = new JButton("Hide Categorie");
 		eastPanel.add(hidecat);
 
-		//setSize(1000, 300);
-		pack();
-		setLocation(300, 200);
+		setSize(1000, 300);
+		//pack();
+		setLocation(200, 200);
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
@@ -170,7 +171,7 @@ public class Main extends JFrame {
 	}
 
 	static {
-		Font f = new Font("Dialog", Font.BOLD, 25);
+		Font f = new Font("Dialog", Font.PLAIN, 22);
 		String[] comps = { "Button", "Label", "RadioButton", "CheckBox", "ToggleButton", "TextArea", "TextField",
 				"Menu", "MenuItem", "FileChooser", "Dialog", "OptionPane" };
 		for (String s : comps) {
