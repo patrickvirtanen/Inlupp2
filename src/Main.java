@@ -32,7 +32,6 @@ public class Main extends JFrame {
 		mb.add(men);
 		men.add(nytt);
 		nytt.addActionListener(new OpenLyss());
-		nytt.addMouseListener(new MusLyss());
 		men.add(stäng);
 
 		topPanel = new JPanel();
@@ -122,7 +121,6 @@ public class Main extends JFrame {
 				mittPanel.remove(scroll);
 			}
 			fv = new KartPanel(path);
-			fv.addMouseListener(new MusLyss());
 			scroll = new JScrollPane(fv);
 			mittPanel.add(scroll, BorderLayout.CENTER);
 
@@ -132,15 +130,7 @@ public class Main extends JFrame {
 		}
 	}
 
-	class MusLyss extends MouseAdapter{
-		@Override
-		public void mouseClicked(MouseEvent e){
-			int x = e.getX();
-			int y = e.getY();
-			System.out.println(x + " " + y);
-			
-		}
-	}
+
 	class NewLyss implements ActionListener {
 		public void actionPerformed(ActionEvent actionEvent) {
 			if (named.isSelected()) {
