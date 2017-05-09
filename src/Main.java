@@ -18,7 +18,8 @@ public class Main extends JFrame {
 	private JRadioButton named = new JRadioButton("Named", false);
 	private JRadioButton described = new JRadioButton("Described", false);
 	private ButtonGroup buttonGroup = new ButtonGroup();
-	String[] categorieList = { "Train", "Bus", "Underground" };
+
+	Category[] categoryList = {Category.Bus, Category.Train, Category.Underground};
 
 	JPanel topPanel;
 	private JFileChooser jfc = new JFileChooser();
@@ -82,7 +83,7 @@ public class Main extends JFrame {
 		JLabel categories = new JLabel("Categories");
 		eastPanel.add(categories);
 
-		JList<String> list = new JList<String>(categorieList);
+		JList<Category> list = new JList<>(categoryList);
 		eastPanel.add(list);
 
 		JScrollPane scroll = new JScrollPane(list);
