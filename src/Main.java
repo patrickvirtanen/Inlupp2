@@ -6,8 +6,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class Main extends JFrame {
+import com.sun.prism.paint.Color;
 
+public class Main extends JFrame {
+	
 	private JMenuBar mb = new JMenuBar();
 	private JMenu men = new JMenu("Archive");
 	private JMenuItem nytt = new JMenuItem("New map");
@@ -23,6 +25,7 @@ public class Main extends JFrame {
 	private KartPanel fv = null;
 	private JScrollPane scroll = new JScrollPane();
 	private JPanel mittPanel = new JPanel();
+	
 	
 
 	private void fonster() {
@@ -147,8 +150,9 @@ public class Main extends JFrame {
 					}
 
 					String name = nameForm.getName();
-
-					//Place aPlace = new Place(name, xx, yy, cat);
+					
+//					Place aPlace = new Place(name);
+//					aPlace.placeName();
 
 					break;
 				}
@@ -158,9 +162,13 @@ public class Main extends JFrame {
 				JOptionPane.showMessageDialog(null, "Choose type!", "Wrong", JOptionPane.ERROR_MESSAGE);
 			}
 			buttonGroup.clearSelection();
+			Cursor cross = new Cursor(Cursor.CROSSHAIR_CURSOR);
+			setCursor(cross);
 		}
 	}
 
+	 
+	 
 	private void run() {
 		fonster();
 	}

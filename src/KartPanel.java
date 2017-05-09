@@ -10,6 +10,7 @@ import java.io.*;
 
 public class KartPanel extends JPanel {
 
+	private JFrame f;
 	ImageIcon bild;
 	int scale = 1;
 
@@ -27,19 +28,34 @@ public class KartPanel extends JPanel {
 
 	class MusLyss extends MouseAdapter {
 		@Override
-		public void mouseClicked(MouseEvent e){
+		public void mouseClicked(MouseEvent e) {
 			int x = e.getX();
 			int y = e.getY();
-			Position p = new Position(x,y);
+			Position p = new Position(x, y);
 			p.getPosition();
 			
 			
+
 		}
 	}
 
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.drawImage(bild.getImage(), 0, 0, bild.getIconWidth() / scale, bild.getIconHeight() / scale, this);
-	}
+	} // paintComponent
+	
+	
+
+//	int[]x = new int[3];
+//	int[]y = new int[3];
+//	int n;  // count of points
+//		
+//	x[0]=10; x[1]=20; x[2]=30;
+//	y[0]=10; y[1]=20; y[2]=30;
+//	n = 3;
+//	Polygon myTri = new Polygon(x, y, n);
+//		
+//	g.drawPolygon(myTri);
+//	g.fillPolygon(myTri);
 
 }
