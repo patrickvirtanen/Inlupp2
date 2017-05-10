@@ -1,19 +1,19 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
+import java.io.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
-import com.sun.prism.paint.Color;
 
 public class Main extends JFrame {
 	
 	private JMenuBar mb = new JMenuBar();
 	private JMenu men = new JMenu("Archive");
 	private JMenuItem nytt = new JMenuItem("New map");
-	private JMenuItem stäng = new JMenuItem("Stäng");
+	private JMenuItem loadP = new JMenuItem("Load places");
+	private JMenuItem saveP = new JMenuItem("Save");
+	private JMenuItem close = new JMenuItem("Exit");
 
 	private JRadioButton named = new JRadioButton("Named", false);
 	private JRadioButton described = new JRadioButton("Described", false);
@@ -36,7 +36,11 @@ public class Main extends JFrame {
 		mb.add(men);
 		men.add(nytt);
 		nytt.addActionListener(new OpenLyss());
-		men.add(stäng);
+		men.add(loadP);
+		loadP.addActionListener(new LoadLyss());
+		men.add(saveP);
+		saveP.addActionListener(new SaveLyss());
+		men.add(close);
 
 		topPanel = new JPanel();
 		add(topPanel, BorderLayout.NORTH);
@@ -165,6 +169,67 @@ public class Main extends JFrame {
 			buttonGroup.clearSelection();
 			Cursor cross = new Cursor(Cursor.CROSSHAIR_CURSOR);
 			setCursor(cross);
+		}
+	}
+
+	class LoadLyss implements ActionListener{
+		public void actionPerformed(ActionEvent ave){
+			// måste ha try-catch när det handlar om filer
+			try {
+
+				FileReader infil = new FileReader("jarvafaltet.places");
+				BufferedReader in = new BufferedReader(infil);
+				String line;
+
+				/*while ((line = in.readLine()) != null) {
+					String[] tokens = line.split(",");  //splitta upp strängen på kommatecken
+					Persnr pnr = Persnr.parsePersnr(tokens[0]);
+					String namn = tokens[1];
+					int vikt = Integer.parseInt(tokens[2]);
+
+
+
+					//kontrollera ifall det är en Named eller Described place och anropa rätt konstruktor
+					Place p = new Place(pnr, namn, vikt);
+
+					add(p); //en metod som lägger till platsen i alla datastrukturer
+
+				}*/
+
+				in.close();
+				infil.close();
+
+			} catch (FileNotFoundException e) {
+				JOptionPane.showMessageDialog(Main.this, "File cannot be opened");
+			} catch (IOException ei){
+				JOptionPane.showMessageDialog(Main.this, "Error " + ei.getMessage());
+			}   // indexOutOfBounds ifall det inte finns en till token, eller om det är fel typ (numberExceptions)
+
+
+		}
+	}
+
+	class SaveLyss implements ActionListener{
+		public void actionPerformed(ActionEvent ave){
+			// csv - kommaseparerade värden
+			try {
+				// spara på samma fil hela tiden
+				FileWriter utfil = new FileWriter("jarvafaltet.places");
+				PrintWriter out = new PrintWriter(utfil);
+
+				// för att gå igenom när det är en Map = .values
+				/*for(Place p : places.values()) {
+					out.println(p.getPnr() + "," + p.getNamn() + "," + p.getVikt());
+				} */
+
+				out.close();
+				utfil.close();
+
+			} catch (FileNotFoundException e) {
+				JOptionPane.showMessageDialog(Main.this, "File cannot be found");
+			} catch (IOException ei) {
+				JOptionPane.showMessageDialog(Main.this, "Error " + ei.getMessage());
+			}
 		}
 	}
 

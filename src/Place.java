@@ -10,6 +10,9 @@ public class Place extends JComponent {
 	private Category category;
 	private int x,y;
 
+	// Göra en type också (Named eller Described) som en enum och lägga in i konstruktorerna automatisk?
+	// Eller går det att lösa på något snyggare sätt?
+
 	public Place(String name){
 		this.name = name;
 	}
