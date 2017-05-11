@@ -30,5 +30,9 @@ public class Place extends JComponent {
 	public String getName() {
 		return name;
 	}
+	
+	public void createPlace(){
+		
+	}
 
 }
