@@ -20,6 +20,7 @@ public class Main extends JFrame {
 	private ButtonGroup buttonGroup = new ButtonGroup();
 
 	Category[] categoryList = {Category.Bus, Category.Train, Category.Underground};
+	JList<Category> list;
 
 	JPanel topPanel;
 	private JFileChooser jfc = new JFileChooser();
@@ -87,7 +88,7 @@ public class Main extends JFrame {
 		JLabel categories = new JLabel("Categories");
 		eastPanel.add(categories);
 
-		JList<Category> list = new JList<>(categoryList);
+		list = new JList<>(categoryList);
 		eastPanel.add(list);
 
 		JScrollPane scroll = new JScrollPane(list);
@@ -142,6 +143,23 @@ public class Main extends JFrame {
 
 	class NewLyss implements ActionListener {
 		public void actionPerformed(ActionEvent actionEvent) {
+			NamedPlace namedPlace = null;
+
+			Cursor cross = new Cursor(Cursor.CROSSHAIR_CURSOR);     //ska ligga i newPlace?
+			fv.setCursor(cross);
+
+			Position p = fv.newPlace();
+			Category c = list.getSelectedValue();
+
+
+			//lägga till MusLyss till kartan
+			// mouseEvent i muslyss
+			// får tillbaka objekt Position
+
+			// if-sats ifall positionen redan finns, annars komma upp formulär
+			// anropa platskonstruktor efter formulär
+
+
 			if (named.isSelected()) {
 				NameForm nameForm = new NameForm();
 				while (true) {
@@ -155,10 +173,9 @@ public class Main extends JFrame {
 					}
 
 					String name = nameForm.getName();
-					
-//					Place aPlace = new Place(name);
-//					aPlace.placeName();
 
+					namedPlace = new NamedPlace(name, p, c);
+					System.out.println(namedPlace);
 					break;
 				}
 			} else if (described.isSelected()) {
@@ -166,9 +183,9 @@ public class Main extends JFrame {
 			} else {
 				JOptionPane.showMessageDialog(null, "Choose type!", "Wrong", JOptionPane.ERROR_MESSAGE);
 			}
+
 			buttonGroup.clearSelection();
-			Cursor cross = new Cursor(Cursor.CROSSHAIR_CURSOR);
-			setCursor(cross);
+			System.out.println(namedPlace);
 		}
 	}
 

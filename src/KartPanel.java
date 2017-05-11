@@ -13,6 +13,8 @@ public class KartPanel extends JPanel {
 	private JFrame f;
 	ImageIcon bild;
 	int scale = 1;
+	private Position p;
+	int x, y;
 
 	public KartPanel(String filnamn) {
 		bild = new ImageIcon(filnamn);
@@ -26,14 +28,26 @@ public class KartPanel extends JPanel {
 
 	}
 
+	// koppling mellan newPlace och MusLyss är knasig
+	public Position newPlace() {
+
+		this.addMouseListener(new MusLyss());
+		System.out.println("jkhk");
+
+
+		return p;
+
+	}
+
 	class MusLyss extends MouseAdapter {
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			int x = e.getX();
-			int y = e.getY();
-			Position p = new Position(x, y);
-			p.getPosition();
-
+			x = e.getX();
+			y = e.getY();
+			p = new Position(x, y);
+			//p.getPosition();
+			setCursor(Cursor.getDefaultCursor());
+			return;
 		}
 	}
 
