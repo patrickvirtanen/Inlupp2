@@ -133,6 +133,8 @@ public class Main extends JFrame {
 			fv = new KartPanel(path);
 			scroll = new JScrollPane(fv);
 			mittPanel.add(scroll, BorderLayout.CENTER);
+			
+			
 
 			//pack();
 			validate();
@@ -140,6 +142,16 @@ public class Main extends JFrame {
 		}
 	}
 
+	// Dessa två metoder nedan leker jag med just nu. Ska skapa ett nytt program för att se om jag får till det.
+	TriangleObject Poly1;
+	public void poly(){
+		Poly1 = new TriangleObject(new int[]{10,200,10}, new int[]{10, 200,400}, Color.BLACK);
+		
+	}
+	public void paintComponent(Graphics g){
+		Poly1.drawPolygon(g);
+		
+	}
 
 	class NewLyss implements ActionListener {
 		class KartLyss extends MouseAdapter {
@@ -180,7 +192,7 @@ public class Main extends JFrame {
 				}
 
 				buttonGroup.clearSelection();
-				System.out.println(namedPlace);
+//				System.out.println(namedPlace);
 			}
 		}
 
@@ -193,6 +205,8 @@ public class Main extends JFrame {
 			// anropa platskonstruktor efter formulär
 		}
 	}
+	
+	
 
 	class LoadLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave){
