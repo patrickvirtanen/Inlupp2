@@ -24,32 +24,22 @@ public class KartPanel extends JPanel {
 		setPreferredSize(new Dimension(w / scale, h / scale));
 		setMaximumSize(new Dimension(w / scale, h / scale));
 		setMinimumSize(new Dimension(w / scale, h / scale));
-		addMouseListener(new MusLyss());
+		//addMouseListener(new MusLyss());
 
 	}
 
 	// koppling mellan newPlace och MusLyss är knasig
-	public Position newPlace() {
+//	public Position newPlace() {
 
-		this.addMouseListener(new MusLyss());
-		System.out.println("jkhk");
+		//this.addMouseListener(new MusLyss());
+//		System.out.println("jkhk");
 
 
-		return p;
+//		return p;
 
-	}
+//	}
 
-	class MusLyss extends MouseAdapter {
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			x = e.getX();
-			y = e.getY();
-			p = new Position(x, y);
-			//p.getPosition();
-			setCursor(Cursor.getDefaultCursor());
-			return;
-		}
-	}
+
 
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);

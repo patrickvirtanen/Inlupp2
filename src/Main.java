@@ -142,50 +142,55 @@ public class Main extends JFrame {
 
 
 	class NewLyss implements ActionListener {
-		public void actionPerformed(ActionEvent actionEvent) {
-			NamedPlace namedPlace = null;
+		class KartLyss extends MouseAdapter {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				fv.setCursor(Cursor.getDefaultCursor());
+				fv.removeMouseListener(this);
 
+				int x = e.getX();
+				int y = e.getY();
+				Position p = new Position(x, y);
+
+				Category c = list.getSelectedValue();
+
+				NamedPlace namedPlace = null;
+				if (named.isSelected()) {
+					NameForm nameForm = new NameForm();
+					while (true) {
+						int test = JOptionPane.showConfirmDialog(null, nameForm, "New", JOptionPane.OK_CANCEL_OPTION);
+						if (test == 2 || test == -1) {
+							break;
+						}
+						if (nameForm.getName() == null || nameForm.getName().equals("")) {
+							JOptionPane.showMessageDialog(null, "Add a name", "Wrong", JOptionPane.ERROR_MESSAGE);
+							continue;
+						}
+
+						String name = nameForm.getName();
+
+						namedPlace = new NamedPlace(name, p, c);
+						System.out.println(namedPlace);
+						break;
+					}
+				} else if (described.isSelected()) {
+					DescriptionForm desForm = new DescriptionForm();
+				} else {
+					JOptionPane.showMessageDialog(null, "Choose type!", "Wrong", JOptionPane.ERROR_MESSAGE);
+				}
+
+				buttonGroup.clearSelection();
+				System.out.println(namedPlace);
+			}
+		}
+
+		public void actionPerformed(ActionEvent actionEvent) {
 			Cursor cross = new Cursor(Cursor.CROSSHAIR_CURSOR);     //ska ligga i newPlace?
 			fv.setCursor(cross);
-
-			Position p = fv.newPlace();
-			Category c = list.getSelectedValue();
-
-
-			//lägga till MusLyss till kartan
-			// mouseEvent i muslyss
-			// får tillbaka objekt Position
+			fv.addMouseListener(new KartLyss());
 
 			// if-sats ifall positionen redan finns, annars komma upp formulär
 			// anropa platskonstruktor efter formulär
-
-
-			if (named.isSelected()) {
-				NameForm nameForm = new NameForm();
-				while (true) {
-					int test = JOptionPane.showConfirmDialog(null, nameForm, "New", JOptionPane.OK_CANCEL_OPTION);
-					if (test == 2 || test == -1) {
-						break;
-					}
-					if (nameForm.getName() == null || nameForm.getName().equals("")) {
-						JOptionPane.showMessageDialog(null, "Add a name", "Wrong", JOptionPane.ERROR_MESSAGE);
-						continue;
-					}
-
-					String name = nameForm.getName();
-
-					namedPlace = new NamedPlace(name, p, c);
-					System.out.println(namedPlace);
-					break;
-				}
-			} else if (described.isSelected()) {
-				DescriptionForm desForm = new DescriptionForm();
-			} else {
-				JOptionPane.showMessageDialog(null, "Choose type!", "Wrong", JOptionPane.ERROR_MESSAGE);
-			}
-
-			buttonGroup.clearSelection();
-			System.out.println(namedPlace);
 		}
 	}
 

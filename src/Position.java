@@ -23,7 +23,7 @@ public class Position extends JComponent {
 		this.y = y;
 	}
 
-	public void getPosition() {
-		System.out.println(x + " " + y);
+	public String getPosition() {
+		return x + " " + y;
 	}
 }
