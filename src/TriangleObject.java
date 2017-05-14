@@ -4,6 +4,7 @@ public class TriangleObject {
 
 	Polygon p;
 	Color c; //Kanske bara ska ha detta i subklasserna?
+	// KOMMENTAR: tänk på att färgerna finns lagrade redan i Category.java !
 
 	public TriangleObject(int[] x, int[] y, Color c) {
 		p = new Polygon();

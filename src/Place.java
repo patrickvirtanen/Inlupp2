@@ -11,9 +11,7 @@ public class Place extends JComponent {
 	private int x,y;
 
 	// Göra en type också (Named eller Described) som en enum och lägga in i konstruktorerna automatisk?
-	// Eller går det att lösa på något snyggare sätt?
-
-
+	// Eller går det att lösa på något snyggare sätt? - HA EN TOSTRING-METOD I VARJE SUBKLASS
 	
 	public Place (String name, Position p, Category category) {
 		this.name = name;
@@ -31,10 +29,6 @@ public class Place extends JComponent {
 
 	public String getCoordinates() {
 		return coordinates.getPosition();
-	}
-	
-	public void createPlace(){
-		
 	}
 
 }

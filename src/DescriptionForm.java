@@ -22,4 +22,8 @@ public class DescriptionForm extends JPanel {
 	public String getName() {
 		return nameField.getText();
 	}
+
+	public String getDescription() {
+		return descriptionField.getText();
+	}
 }

@@ -20,6 +20,20 @@ public enum Category {
 				return Color.BLACK;
 		}
 	}
+
+	public static Category parseCategory(String str){
+		switch(str) {
+			case "Bus":
+				return Category.Bus;
+			case "Train":
+				return Category.Train;
+			case "Underground":
+				return Category.Underground;
+			default:
+				return Category.None;
+		}
+	}
+
 }
 
 // ovan kan sedan skapas med typ

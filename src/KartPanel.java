@@ -10,6 +10,7 @@ import java.io.*;
 
 public class KartPanel extends JPanel {
 
+	//TODO: gå igenom vilka attribut vi behöver här
 	private JFrame f;
 	ImageIcon bild;
 	int scale = 1;
@@ -24,22 +25,7 @@ public class KartPanel extends JPanel {
 		setPreferredSize(new Dimension(w / scale, h / scale));
 		setMaximumSize(new Dimension(w / scale, h / scale));
 		setMinimumSize(new Dimension(w / scale, h / scale));
-		//addMouseListener(new MusLyss());
-
 	}
-
-	// koppling mellan newPlace och MusLyss är knasig
-//	public Position newPlace() {
-
-		//this.addMouseListener(new MusLyss());
-//		System.out.println("jkhk");
-
-
-//		return p;
-
-//	}
-
-
 
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);

@@ -7,6 +7,9 @@ public class DescribedPlace extends Place {
 	public DescribedPlace (String description, String name, Position p, Category category) {
 		super(name, p, category);
 		this.description = description;
+	}
 
+	public String toString() {
+		return  "Described," + getCategory() + "," + getCoordinates() + "," + getName() + "," + description;
 	}
 }

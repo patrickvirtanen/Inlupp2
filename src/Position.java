@@ -15,6 +15,7 @@ public class Position extends JComponent {
 		this.y = y;
 	}
 
+	//TODO: kan vi ta bort dessa metoder nedan?
 	public void setX(int x) {
 		this.x = x;
 	}
@@ -24,6 +25,6 @@ public class Position extends JComponent {
 	}
 
 	public String getPosition() {
-		return x + " " + y;
+		return x + "," + y;
 	}
 }

@@ -8,6 +8,6 @@ public class NamedPlace extends Place {
 	}
 
 	public String toString() {
-		return getName() + " " + getCategory() + " " + getCoordinates();
+		return  "Named," + getCategory() + "," + getCoordinates() + "," + getName();
 	}
 }
