@@ -27,6 +27,10 @@ public class Place extends JComponent {
 		return category;
 	}
 
+	public Position getPosition() {
+		return coordinates;
+	}
+
 	public String getCoordinates() {
 		return coordinates.getPosition();
 	}

@@ -5,6 +5,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.util.*;
+import java.util.List;
 
 public class Main extends JFrame {
 	
@@ -19,10 +21,18 @@ public class Main extends JFrame {
 	private JRadioButton described = new JRadioButton("Described", false);
 	private ButtonGroup buttonGroup = new ButtonGroup();
 
-	Category[] categoryList = {Category.Bus, Category.Train, Category.Underground};
-	JList<Category> list;
+	private Category[] categoryList = {Category.Bus, Category.Train, Category.Underground};
+	private JList<Category> list;
+	// Skapa ny "ordbok" för att slå upp vilka platser som har en kategori
+	private Map<Category, Set<Place>> categoryPlaces = new HashMap<>();
 
-	JPanel topPanel;
+	// För sökning av Plats på namn
+	private Map<String, List<Place>> placePerName = new HashMap<>();
+
+	// För sökning av Plats på Position
+	private Map<Position, Place> placePerPosition = new HashMap<>();
+
+	private JPanel topPanel;
 	private JFileChooser jfc = new JFileChooser();
 	private KartPanel fv = null;
 	private JScrollPane scroll = new JScrollPane();
@@ -31,6 +41,13 @@ public class Main extends JFrame {
 	private boolean existingMap = false;
 
 	private void fonster() {
+		// I början har kategorin "buss" inga platser kopplad till sig (tom mängd)
+		categoryPlaces.put(Category.Bus, new HashSet<>());
+		// Samma gäller övriga kategorier
+		categoryPlaces.put(Category.Underground, new HashSet<>());
+		categoryPlaces.put(Category.Train, new HashSet<>());
+		categoryPlaces.put(Category.None, new HashSet<>());
+
 		setLayout(new BorderLayout());
 		addComponentListener(new ResizeLyss());
 		setJMenuBar(mb);
@@ -161,11 +178,28 @@ public class Main extends JFrame {
 
 
 	//TODO: metod för att lägga till ny plats i alla datastrukturer som krävs
+	private void addPlace(Place p) {
+		// Addera till platser (med position som nyckel ?)
+		placePerPosition.put(p.getPosition(), p);
+
+		// Addera till placePerName (platser med samma namn)
+		String name = p.getName();
+		List<Place> sameName = placePerName.get(name);
+		if (sameName == null){
+			sameName = new ArrayList<Place>();
+			placePerName.put(name, sameName);
+		}
+		sameName.add(p);
+
+		// Hämta ut mängden för kategorin, och lägg till p i den
+		categoryPlaces.get(p.getCategory()).add(p);
+	}
 
 	//TODO: metod för att ta bort alla markerade platser från alla datastrukturer som behövs
 
 
 	//TODO: metod för att gömma alla markerade platser
+
 
 	class NewLyss implements ActionListener {
 
@@ -225,6 +259,7 @@ public class Main extends JFrame {
 						String name = nameForm.getName();
 
 						namedPlace = new NamedPlace(name, p, c);
+						addPlace(namedPlace);
 						System.out.println(namedPlace);         //testutskrift
 						break;
 					}
@@ -247,6 +282,7 @@ public class Main extends JFrame {
 						String description = desForm.getDescription();
 
 						describedPlace = new DescribedPlace(description, name, p, c);
+						addPlace(describedPlace);
 						System.out.println(describedPlace);     //testutskrift
 						break;
 					}
@@ -258,6 +294,14 @@ public class Main extends JFrame {
 				buttonGroup.clearSelection();
 				list.clearSelection();
 			}
+		}
+	}
+
+	class SearchLyss implements ActionListener {
+		public void actionPerformed(ActionEvent ave) {
+			//TODO: börja med att avmarkera alla ev markerade platser
+
+			//TODO: visa samt markera alla platser som matchar söksträngen
 		}
 	}
 
@@ -315,12 +359,12 @@ public class Main extends JFrame {
 				PrintWriter out = new PrintWriter(utfil);
 
 				// för att gå igenom när det är en Map = .values
-				/*for(Place p : places.values()) {
-					out.println(p.getPnr() + "," + p.getNamn() + "," + p.getVikt());
-				} */
+				for(Place p : placePerPosition.values()) {
+					out.println(p);
+				}
 
 				// För att få filen att spara något då vi inte har några datastrukturer valda än
-				out.println("Named,Bus,485,335,514\n" +
+				/*out.println("Named,Bus,485,335,514\n" +
 						"Named,Underground,666,487,Kista\n" +
 						"Named,Bus,311,147,514\n" +
 						"Named,Bus,634,354,514\n" +
@@ -342,7 +386,7 @@ public class Main extends JFrame {
 						"Named,Bus,137,717,514\n" +
 						"Named,Underground,272,197,Akalla\n" +
 						"Described,None,711,453,Forum,DSV was here until 2014\n" +
-						"Named,Bus,915,475,514");
+						"Named,Bus,915,475,514");*/
 
 				out.close();
 				utfil.close();
