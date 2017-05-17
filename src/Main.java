@@ -32,6 +32,8 @@ public class Main extends JFrame {
 	// För sökning av Plats på Position
 	private Map<Position, Place> placePerPosition = new HashMap<>();
 
+	//TODO: ha en datastruktur för att se markerade platser? Eller kolla det på något annat sätt?
+
 	private JPanel topPanel;
 	private JFileChooser jfc = new JFileChooser();
 	private KartPanel fv = null;
@@ -39,6 +41,8 @@ public class Main extends JFrame {
 	private JPanel mittPanel = new JPanel();
 	
 	private boolean existingMap = false;
+	private boolean changed = false;
+	private boolean loadedPlaces = false;
 
 	private void fonster() {
 		// I början har kategorin "buss" inga platser kopplad till sig (tom mängd)
@@ -119,7 +123,9 @@ public class Main extends JFrame {
 		//pack();
 		setLocation(200, 200);
 		setVisible(true);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+		addWindowListener(new ExitLyss());
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 	}
 
 	class ResizeLyss extends ComponentAdapter {
@@ -134,6 +140,21 @@ public class Main extends JFrame {
 
 			//TODO: if-sats om det redan finns en karta inladdad
 			//TODO fort: samt osparade ändringar skall användaren varnas och kunna bryta för att spara
+
+			// Om man öppnar en andra karta måste den första avslutas först och platserna rensas ?
+			if (changed || existingMap){
+				int svar = JOptionPane.showConfirmDialog(Main.this,
+						"Unsaved changes, do you still want to continue?",
+						"Warning", JOptionPane.OK_CANCEL_OPTION);
+				if (svar != JOptionPane.OK_OPTION)
+					return;
+			}
+			//TODO: tömma alla datastrukturer på platser
+
+			//Har en precis laddat in en karta finns inga osparade platser
+			changed = false;    //TODO: ska den här ligga i en if-sats ?
+			loadedPlaces = false;
+
 
 			FileFilter ff = new FileNameExtensionFilter("Bilder", "jpg", "png", "gif");
 			jfc.setFileFilter(ff);
@@ -193,10 +214,33 @@ public class Main extends JFrame {
 
 		// Hämta ut mängden för kategorin, och lägg till p i den
 		categoryPlaces.get(p.getCategory()).add(p);
+
+		//Platserna är förändrade i jämförelse med den sparade filen (finns nya platser)
+		changed = true;
 	}
 
 	//TODO: metod för att ta bort alla markerade platser från alla datastrukturer som behövs
+	private void removePlace() {
 
+		//TODO: för varje markerad plats, ta bort
+//		for() {
+//			// Ta bort från platser
+//			placePerPosition.remove(pnr);
+//
+//			// Ta bort från placePerName
+//			String name = p.getName();
+//			List<Place> sameName = placePerName.get(name);
+//			sameName.remove(p);
+//
+//			// Om ingen längre har det namnet, ta bort namnlistan
+//			if (sameName.isEmpty()) {
+//				placePerName.remove(name);
+//			}
+//		}
+
+		//Platserna är förändrade i jämförelse med den sparade filen (platser tagits bort)
+		changed = true;
+	}
 
 	//TODO: metod för att gömma alla markerade platser
 
@@ -307,10 +351,33 @@ public class Main extends JFrame {
 
 	class LoadLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave){
+			Place loadedPlace = null;
+
+			if(loadedPlaces && changed) {
+				int answer = JOptionPane.showConfirmDialog(Main.this,
+						"Unsaved changes, do you still want to continue?",
+						"Warning", JOptionPane.OK_CANCEL_OPTION);
+				if (answer != JOptionPane.OK_OPTION) {
+					return;
+				}
+			}
+
+			//Sökväg på min dator så kommer inte funka hos dig
+			File mapp = new File("/Users/tildas/IdeaProjects/inlupp2_git");
+			//File mapp = new File("C:/Users/patri/Downloads");
+			jfc.setCurrentDirectory(mapp);
+
+			int svar = jfc.showOpenDialog(Main.this);
+
+			if (svar != JFileChooser.APPROVE_OPTION) {
+				return;
+			}
+			File fil = jfc.getSelectedFile();
+			String path = fil.getAbsolutePath();
+
 			// måste ha try-catch när det handlar om filer
 			try {
-
-				FileReader infil = new FileReader("jarvafaltet.places");
+				FileReader infil = new FileReader(path);
 				BufferedReader in = new BufferedReader(infil);
 				String line;
 
@@ -325,16 +392,20 @@ public class Main extends JFrame {
 
 					if (type.equals("Described")) {
 						String description = tokens[5];
-						DescribedPlace describedPlace = new DescribedPlace(description, name, p, category);
+						loadedPlace = new DescribedPlace(description, name, p, category);
+
 					} else if (type.equals("Named")) {
-						NamedPlace namedPlace = new NamedPlace(name, p, category);
+						loadedPlace = new NamedPlace(name, p, category);
+
 					} else {
 						JOptionPane.showMessageDialog(null, "Wrong file", "Error", JOptionPane.ERROR_MESSAGE);
+						loadedPlace = null;
 					}
 
-					//TODO: lägga till platsen beroende på typ ?
-					//add(p); //en metod som lägger till platsen i alla datastrukturer
-
+					if (loadedPlace != null) {
+						addPlace(loadedPlace); //en metod som lägger till platsen i alla datastrukturer
+					}
+					loadedPlaces = true;
 				}
 
 				in.close();
@@ -346,16 +417,29 @@ public class Main extends JFrame {
 				JOptionPane.showMessageDialog(Main.this, "Error " + ei.getMessage());
 			}   // indexOutOfBounds ifall det inte finns en till token, eller om det är fel typ (numberExceptions)
 
-
 		}
 	}
 
 	class SaveLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave){
+
+			//Sökväg på min dator så kommer inte funka hos dig
+			File mapp = new File("/Users/tildas/IdeaProjects/inlupp2_git");
+			//File mapp = new File("C:/Users/patri/Downloads");
+			jfc.setCurrentDirectory(mapp);
+
+			int svar = jfc.showSaveDialog(Main.this);
+
+			if (svar != JFileChooser.APPROVE_OPTION) {
+				return;
+			}
+			File fil = jfc.getSelectedFile();
+			String path = fil.getAbsolutePath();
+
 			// csv - kommaseparerade värden
 			try {
 				// spara på samma fil hela tiden
-				FileWriter utfil = new FileWriter("jarvafaltet.places");
+				FileWriter utfil = new FileWriter(path);
 				PrintWriter out = new PrintWriter(utfil);
 
 				// för att gå igenom när det är en Map = .values
@@ -391,6 +475,9 @@ public class Main extends JFrame {
 				out.close();
 				utfil.close();
 
+				//Platserna är sparade och det finns inga förändringar i jämförelse med den sparade filen
+				changed = false;
+
 			} catch (FileNotFoundException e) {
 				JOptionPane.showMessageDialog(Main.this, "File cannot be found");
 			} catch (IOException ei) {
@@ -399,9 +486,27 @@ public class Main extends JFrame {
 		}
 	}
 
-	class ExitLyss implements ActionListener {
-		public void actionPerformed(ActionEvent ave) {
-			//TODO: varnar användaren om det finns osparade ändringar när programmet avslutas
+	class ExitLyss extends WindowAdapter implements ActionListener {
+		//TODO: varnar användaren om det finns osparade ändringar när programmet avslutas
+
+		private void doIt(){
+			if (changed){
+				int answer = JOptionPane.showConfirmDialog(Main.this,
+						"Unsaved changes, do you still want to continue?",
+						"Warning", JOptionPane.OK_CANCEL_OPTION);
+				if (answer == JOptionPane.OK_OPTION) {
+					System.exit(0);
+				}
+			}
+			else
+				System.exit(0);
+		}
+		@Override
+		public void windowClosing(WindowEvent wev){
+			doIt();
+		}
+		public void actionPerformed(ActionEvent ave){
+			doIt();
 		}
 	}
 
