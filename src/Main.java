@@ -185,15 +185,15 @@ public class Main extends JFrame {
 	}
 
 	// Dessa två metoder nedan leker jag med just nu. Ska skapa ett nytt program för att se om jag får till det.
-	TriangleObject Poly1;
-	public void poly(){
-		Poly1 = new TriangleObject(new int[]{10,200,10}, new int[]{10, 200,400}, Color.BLACK);
-		
-	}
-	public void paintComponent(Graphics g){
-		Poly1.drawPolygon(g);
-		
-	}
+//	TriangleObject Poly1;
+//	public void poly(){
+//		Poly1 = new TriangleObject(new int[]{10,200,10}, new int[]{10, 200,400}, Color.BLACK);
+//		
+//	}
+//	public void paintComponent(Graphics g){
+//		Poly1.drawPolygon(g);
+//		
+//	}
 
 	//TODO: metod för att se vilka platser som är markerade
 
