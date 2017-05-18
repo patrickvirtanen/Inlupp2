@@ -93,7 +93,7 @@ public class Main extends JFrame {
 
 		JButton searchKnapp = new JButton("Search");
 		topPanel.add(searchKnapp);
-		//visaKnapp.addActionListener(new VisaLyss());
+		searchKnapp.addActionListener(new SearchLyss());
 
 		JButton hideKnapp = new JButton("Hide");
 		topPanel.add(hideKnapp);
@@ -185,15 +185,15 @@ public class Main extends JFrame {
 	}
 
 	// Dessa två metoder nedan leker jag med just nu. Ska skapa ett nytt program för att se om jag får till det.
-	TriangleObject Poly1;
-	public void poly(){
+	//TriangleObject Poly1;
+	/*public void poly(){
 		Poly1 = new TriangleObject(new int[]{10,200,10}, new int[]{10, 200,400}, Color.BLACK);
 		
 	}
 	public void paintComponent(Graphics g){
 		Poly1.drawPolygon(g);
 		
-	}
+	}*/
 
 	//TODO: metod för att se vilka platser som är markerade
 
@@ -335,6 +335,7 @@ public class Main extends JFrame {
 					JOptionPane.showMessageDialog(null, "Choose type!", "Wrong", JOptionPane.ERROR_MESSAGE);
 				}
 
+
 				buttonGroup.clearSelection();
 				list.clearSelection();
 			}
@@ -346,6 +347,8 @@ public class Main extends JFrame {
 			//TODO: börja med att avmarkera alla ev markerade platser
 
 			//TODO: visa samt markera alla platser som matchar söksträngen
+
+			fv.paintTriangle();
 		}
 	}
 

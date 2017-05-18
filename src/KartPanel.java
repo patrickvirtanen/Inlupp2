@@ -22,32 +22,26 @@ public class KartPanel extends JPanel {
 		int w = bild.getIconWidth();
 		int h = bild.getIconHeight();
 
+		setLayout(null);
+
 		setPreferredSize(new Dimension(w / scale, h / scale));
 		setMaximumSize(new Dimension(w / scale, h / scale));
 		setMinimumSize(new Dimension(w / scale, h / scale));
+		setOpaque(false);
+	}
+
+	public void paintTriangle() {
+		TriangleObject tro = new TriangleObject(this);
+		add(tro);
+		validate();
+		repaint();
+		System.out.println("TRIANGEL");
 	}
 
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.drawImage(bild.getImage(), 0, 0, bild.getIconWidth() / scale, bild.getIconHeight() / scale, this);
-	} // paintComponent
 
-//	public void paintTraiangle(Graphics g) {
-//		int[] x = new int[3];
-//		int[] y = new int[3];
-//		int n; // count of points
-//
-//		x[0] = 25;
-//		x[1] = 145;
-//		x[2] = 30;
-//		y[0] = 25;
-//		y[1] = 25;
-//		y[2] = 145;
-//		n = 3;
-//		Polygon myTri = new Polygon(x, y, n);
-//
-//		g.drawPolygon(myTri);
-//		g.fillPolygon(myTri);
-//	}
+	} // paintComponent
 
 }
