@@ -15,6 +15,14 @@ public class Position extends JComponent {
 		this.y = y;
 	}
 
+	public int getPositionX() {
+		return x;
+	}
+
+	public int getPositionY() {
+		return y;
+	}
+
 	//TODO: kan vi ta bort dessa metoder nedan?
 	public void setX(int x) {
 		this.x = x;

@@ -275,6 +275,7 @@ public class Main extends JFrame {
 				int y = e.getY();
 				Position p = new Position(x, y);
 
+
 				//TODO: välja datastruktur för position
 				//TODO: felhantering för position
 				// if-sats ifall positionen redan finns, annars komma upp formulär
@@ -284,6 +285,8 @@ public class Main extends JFrame {
 				if (c == null) {
 					c = Category.None;
 				}
+
+				fv.paintTriangle(p, c);
 
 				NamedPlace namedPlace = null;
 				DescribedPlace describedPlace = null;
@@ -348,7 +351,7 @@ public class Main extends JFrame {
 
 			//TODO: visa samt markera alla platser som matchar söksträngen
 
-			fv.paintTriangle();
+			//fv.paintTriangle();
 		}
 	}
 

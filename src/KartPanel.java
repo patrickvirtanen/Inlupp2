@@ -14,7 +14,7 @@ public class KartPanel extends JPanel {
 	private JFrame f;
 	ImageIcon bild;
 	int scale = 1;
-	private Position p;
+	private Position position;
 	int x, y;
 
 	public KartPanel(String filnamn) {
@@ -30,8 +30,9 @@ public class KartPanel extends JPanel {
 		setOpaque(false);
 	}
 
-	public void paintTriangle() {
-		TriangleObject tro = new TriangleObject(this);
+	public void paintTriangle(Position p, Category cat) {
+		position = p;
+		TriangleObject tro = new TriangleObject(this, p, cat);
 		add(tro);
 		validate();
 		repaint();
