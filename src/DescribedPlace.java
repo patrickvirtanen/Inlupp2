@@ -9,6 +9,10 @@ public class DescribedPlace extends Place {
 		this.description = description;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
 	public String toString() {
 		return  "Described," + getCategory() + "," + getCoordinates() + "," + getName() + "," + description;
 	}

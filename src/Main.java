@@ -116,10 +116,10 @@ public class Main extends JFrame {
 		JScrollPane scroll = new JScrollPane(list);
 		eastPanel.add(scroll);
 
-		JButton hidecat = new JButton("Hide Categorie");
+		JButton hidecat = new JButton("Hide Category");
 		eastPanel.add(hidecat);
 
-		setSize(1000, 300);
+		setSize(1000, 500);
 		//pack();
 		setLocation(200, 200);
 		setVisible(true);
@@ -286,7 +286,7 @@ public class Main extends JFrame {
 					c = Category.None;
 				}
 
-				fv.paintTriangle(p, c);
+
 
 				NamedPlace namedPlace = null;
 				DescribedPlace describedPlace = null;
@@ -307,6 +307,9 @@ public class Main extends JFrame {
 
 						namedPlace = new NamedPlace(name, p, c);
 						addPlace(namedPlace);
+
+						fv.paintTriangle(p, c, namedPlace);
+
 						System.out.println(namedPlace);         //testutskrift
 						break;
 					}
@@ -330,6 +333,9 @@ public class Main extends JFrame {
 
 						describedPlace = new DescribedPlace(description, name, p, c);
 						addPlace(describedPlace);
+
+						fv.paintTriangle(p, c, describedPlace);
+
 						System.out.println(describedPlace);     //testutskrift
 						break;
 					}
@@ -337,7 +343,6 @@ public class Main extends JFrame {
 				} else {
 					JOptionPane.showMessageDialog(null, "Choose type!", "Wrong", JOptionPane.ERROR_MESSAGE);
 				}
-
 
 				buttonGroup.clearSelection();
 				list.clearSelection();
@@ -452,31 +457,6 @@ public class Main extends JFrame {
 				for(Place p : placePerPosition.values()) {
 					out.println(p);
 				}
-
-				// För att få filen att spara något då vi inte har några datastrukturer valda än
-				/*out.println("Named,Bus,485,335,514\n" +
-						"Named,Underground,666,487,Kista\n" +
-						"Named,Bus,311,147,514\n" +
-						"Named,Bus,634,354,514\n" +
-						"Named,Underground,450,350,Husby\n" +
-						"Named,Bus,762,624,514\n" +
-						"Named,Bus,365,235,514\n" +
-						"Named,Underground,691,528,Kista\n" +
-						"Named,Train,929,317,Hellenelund\n" +
-						"Named,Bus,719,507,514\n" +
-						"Named,Bus,818,382,514\n" +
-						"Named,Bus,94,786,179\n" +
-						"Named,Underground,224,169,Akalla\n" +
-						"Named,Bus,527,259,514\n" +
-						"Named,Bus,883,578,514\n" +
-						"Named,Bus,728,511,179\n" +
-						"Named,Underground,416,313,Husby\n" +
-						"Named,Bus,760,391,514\n" +
-						"Named,None,736,397,NOD\n" +
-						"Named,Bus,137,717,514\n" +
-						"Named,Underground,272,197,Akalla\n" +
-						"Described,None,711,453,Forum,DSV was here until 2014\n" +
-						"Named,Bus,915,475,514");*/
 
 				out.close();
 				utfil.close();
