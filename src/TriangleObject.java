@@ -18,6 +18,8 @@ public class TriangleObject extends JComponent{
 		p = new Polygon();
 		place = pla;
 
+		//TODO: bara skicka in platsen till triangeln, och anropa resten på den
+
 		position = pos;
 
 		x = position.getPositionX();
@@ -54,5 +56,9 @@ public class TriangleObject extends JComponent{
 		g.setColor(col);
 		g.fillPolygon(xes, yes, 3);
 		g.drawPolygon(p);
+	}
+
+	public Place getPlace() {
+		return place;
 	}
 }

@@ -21,6 +21,8 @@ public class Main extends JFrame {
 	private JRadioButton described = new JRadioButton("Described", false);
 	private ButtonGroup buttonGroup = new ButtonGroup();
 
+	private JTextField textSearch;
+
 	private Category[] categoryList = {Category.Bus, Category.Train, Category.Underground};
 	private JList<Category> list;
 	// Skapa ny "ordbok" för att slå upp vilka platser som har en kategori
@@ -88,8 +90,8 @@ public class Main extends JFrame {
 		buttonGroup.add(named);
 		buttonGroup.add(described);
 
-		JTextField text = new JTextField("Search", 10);
-		topPanel.add(text);
+		textSearch = new JTextField("Search", 10);
+		topPanel.add(textSearch);
 
 		JButton searchKnapp = new JButton("Search");
 		topPanel.add(searchKnapp);
@@ -105,7 +107,7 @@ public class Main extends JFrame {
 
 		JButton coordinatesKnapp = new JButton("Coordinates");
 		topPanel.add(coordinatesKnapp);
-		//visaKnapp.addActionListener(new VisaLyss());
+		coordinatesKnapp.addActionListener(new CoordinatesLyss());
 
 		JLabel categories = new JLabel("Categories");
 		eastPanel.add(categories);
@@ -217,6 +219,8 @@ public class Main extends JFrame {
 
 		//Platserna är förändrade i jämförelse med den sparade filen (finns nya platser)
 		changed = true;
+
+		fv.paintTriangle(p.getPosition(), p.getCategory(), p);
 	}
 
 	//TODO: metod för att ta bort alla markerade platser från alla datastrukturer som behövs
@@ -271,6 +275,8 @@ public class Main extends JFrame {
 				fv.setCursor(Cursor.getDefaultCursor());
 				fv.removeMouseListener(this);
 
+				//TODO: göra så det inte går att sätta trianglar utanför kartan? (går med hög upplösning)
+
 				int x = e.getX();
 				int y = e.getY();
 				Position p = new Position(x, y);
@@ -285,8 +291,6 @@ public class Main extends JFrame {
 				if (c == null) {
 					c = Category.None;
 				}
-
-
 
 				NamedPlace namedPlace = null;
 				DescribedPlace describedPlace = null;
@@ -308,7 +312,6 @@ public class Main extends JFrame {
 						namedPlace = new NamedPlace(name, p, c);
 						addPlace(namedPlace);
 
-						fv.paintTriangle(p, c, namedPlace);
 
 						System.out.println(namedPlace);         //testutskrift
 						break;
@@ -334,8 +337,6 @@ public class Main extends JFrame {
 						describedPlace = new DescribedPlace(description, name, p, c);
 						addPlace(describedPlace);
 
-						fv.paintTriangle(p, c, describedPlace);
-
 						System.out.println(describedPlace);     //testutskrift
 						break;
 					}
@@ -356,7 +357,28 @@ public class Main extends JFrame {
 
 			//TODO: visa samt markera alla platser som matchar söksträngen
 
-			//fv.paintTriangle();
+			String searchedPlace = textSearch.getText();
+
+			List<Place> sameName = placePerName.get(searchedPlace);
+
+			if (sameName == null) {
+				JOptionPane.showMessageDialog(null, "No existing place with that name!", "Error", JOptionPane.ERROR_MESSAGE);
+				textSearch.setText("Search");
+				return;
+			} else {
+				for (Place p: sameName) {
+					//TODO: anropa metod som visar platsen
+
+					//TODO: anropa metod som markerar platsen
+				}
+			}
+
+		}
+	}
+
+	class CoordinatesLyss implements ActionListener{
+		public void actionPerformed(ActionEvent ave) {
+
 		}
 	}
 
