@@ -34,5 +34,6 @@ public class Place extends JComponent {
 	public String getCoordinates() {
 		return coordinates.getPosition();
 	}
+	
 
 }

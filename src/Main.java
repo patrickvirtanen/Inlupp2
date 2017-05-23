@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.List;
 
 public class Main extends JFrame {
-	
+
 	private JMenuBar mb = new JMenuBar();
 	private JMenu men = new JMenu("Archive");
 	private JMenuItem nytt = new JMenuItem("New map");
@@ -21,9 +21,11 @@ public class Main extends JFrame {
 	private JRadioButton described = new JRadioButton("Described", false);
 	private ButtonGroup buttonGroup = new ButtonGroup();
 
+
 	private JTextField textSearch;
 
 	private Category[] categoryList = {Category.Bus, Category.Train, Category.Underground};
+
 	private JList<Category> list;
 	// Skapa ny "ordbok" för att slå upp vilka platser som har en kategori
 	private Map<Category, Set<Place>> categoryPlaces = new HashMap<>();
@@ -41,7 +43,7 @@ public class Main extends JFrame {
 	private KartPanel fv = null;
 	private JScrollPane scroll = new JScrollPane();
 	private JPanel mittPanel = new JPanel();
-	
+
 	private boolean existingMap = false;
 	private boolean changed = false;
 	private boolean loadedPlaces = false;
@@ -103,7 +105,7 @@ public class Main extends JFrame {
 
 		JButton removeKnapp = new JButton("Remove");
 		topPanel.add(removeKnapp);
-		//visaKnapp.addActionListener(new VisaLyss());
+		removeKnapp.addActionListener(new RemoveLyss());
 
 		JButton coordinatesKnapp = new JButton("Coordinates");
 		topPanel.add(coordinatesKnapp);
@@ -130,8 +132,14 @@ public class Main extends JFrame {
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 	}
 
+	class RemoveLyss implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			fv.removeAllMarked();
+		}
+	}
+
 	class ResizeLyss extends ComponentAdapter {
-		public void componentResized (ComponentEvent cve) {
+		public void componentResized(ComponentEvent cve) {
 			topPanel.revalidate();
 			revalidate();
 		}
@@ -144,19 +152,17 @@ public class Main extends JFrame {
 			//TODO fort: samt osparade ändringar skall användaren varnas och kunna bryta för att spara
 
 			// Om man öppnar en andra karta måste den första avslutas först och platserna rensas ?
-			if (changed || existingMap){
-				int svar = JOptionPane.showConfirmDialog(Main.this,
-						"Unsaved changes, do you still want to continue?",
-						"Warning", JOptionPane.OK_CANCEL_OPTION);
+			if (changed || existingMap) {
+				int svar = JOptionPane.showConfirmDialog(Main.this, "Unsaved changes, do you still want to continue?",
+					"Warning", JOptionPane.OK_CANCEL_OPTION);
 				if (svar != JOptionPane.OK_OPTION)
 					return;
 			}
 			//TODO: tömma alla datastrukturer på platser
 
 			//Har en precis laddat in en karta finns inga osparade platser
-			changed = false;    //TODO: ska den här ligga i en if-sats ?
+			changed = false; //TODO: ska den här ligga i en if-sats ?
 			loadedPlaces = false;
-
 
 			FileFilter ff = new FileNameExtensionFilter("Bilder", "jpg", "png", "gif");
 			jfc.setFileFilter(ff);
@@ -186,19 +192,10 @@ public class Main extends JFrame {
 		}
 	}
 
-	// Dessa två metoder nedan leker jag med just nu. Ska skapa ett nytt program för att se om jag får till det.
-	//TriangleObject Poly1;
-	/*public void poly(){
-		Poly1 = new TriangleObject(new int[]{10,200,10}, new int[]{10, 200,400}, Color.BLACK);
+	//TODO: metod för att se vilka platser som är markerade
+	public void markedTriangle(){
 		
 	}
-	public void paintComponent(Graphics g){
-		Poly1.drawPolygon(g);
-		
-	}*/
-
-	//TODO: metod för att se vilka platser som är markerade
-
 
 	//TODO: metod för att lägga till ny plats i alla datastrukturer som krävs
 	private void addPlace(Place p) {
@@ -208,7 +205,7 @@ public class Main extends JFrame {
 		// Addera till placePerName (platser med samma namn)
 		String name = p.getName();
 		List<Place> sameName = placePerName.get(name);
-		if (sameName == null){
+		if (sameName == null) {
 			sameName = new ArrayList<Place>();
 			placePerName.put(name, sameName);
 		}
@@ -224,30 +221,37 @@ public class Main extends JFrame {
 	}
 
 	//TODO: metod för att ta bort alla markerade platser från alla datastrukturer som behövs
-	private void removePlace() {
+	private void removePlace(Place p) {
+		placePerPosition.remove(p.getPosition(),p);
+		String name = p.getName();
+		List<Place> sameName = placePerName.remove(name);
+
+		sameName.remove(p);
+
+		// Hämta ut mängden för kategorin, och lägg till p i den
+		categoryPlaces.get(p.getCategory()).remove(p);
 
 		//TODO: för varje markerad plats, ta bort
-//		for() {
-//			// Ta bort från platser
-//			placePerPosition.remove(pnr);
-//
-//			// Ta bort från placePerName
-//			String name = p.getName();
-//			List<Place> sameName = placePerName.get(name);
-//			sameName.remove(p);
-//
-//			// Om ingen längre har det namnet, ta bort namnlistan
-//			if (sameName.isEmpty()) {
-//				placePerName.remove(name);
-//			}
-//		}
+		//		for() {
+		//			// Ta bort från platser
+		//			placePerPosition.remove(pnr);
+		//
+		//			// Ta bort från placePerName
+		//			String name = p.getName();
+		//			List<Place> sameName = placePerName.get(name);
+		//			sameName.remove(p);
+		//
+		//			// Om ingen längre har det namnet, ta bort namnlistan
+		//			if (sameName.isEmpty()) {
+		//				placePerName.remove(name);
+		//			}
+		//		}
 
 		//Platserna är förändrade i jämförelse med den sparade filen (platser tagits bort)
 		changed = true;
 	}
 
 	//TODO: metod för att gömma alla markerade platser
-
 
 	class NewLyss implements ActionListener {
 
@@ -268,6 +272,8 @@ public class Main extends JFrame {
 				return;
 			}
 		}
+		
+	
 
 		class KartLyss extends MouseAdapter {
 			@Override
@@ -280,7 +286,6 @@ public class Main extends JFrame {
 				int x = e.getX();
 				int y = e.getY();
 				Position p = new Position(x, y);
-
 
 				//TODO: välja datastruktur för position
 				//TODO: felhantering för position
@@ -311,9 +316,14 @@ public class Main extends JFrame {
 
 						namedPlace = new NamedPlace(name, p, c);
 						addPlace(namedPlace);
+						System.out.println("nu är denna tillagd " + namedPlace);
+//						removePlace(namedPlace);
+//						System.out.println("nu är denna borttagen " + namedPlace);
+						//Måste kunna skicka med namedPlace till removePlace på något sätt.
+						
 
 
-						System.out.println(namedPlace);         //testutskrift
+						System.out.println(namedPlace); //testutskrift
 						break;
 					}
 				} else if (described.isSelected()) {
@@ -327,7 +337,8 @@ public class Main extends JFrame {
 							JOptionPane.showMessageDialog(null, "Add a name", "Error", JOptionPane.ERROR_MESSAGE);
 							continue;
 						} else if (desForm.getDescription() == null || desForm.getDescription().equals("")) {
-							JOptionPane.showMessageDialog(null, "Add a description", "Error", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(null, "Add a description", "Error",
+								JOptionPane.ERROR_MESSAGE);
 							continue;
 						}
 
@@ -337,7 +348,11 @@ public class Main extends JFrame {
 						describedPlace = new DescribedPlace(description, name, p, c);
 						addPlace(describedPlace);
 
-						System.out.println(describedPlace);     //testutskrift
+
+						fv.paintTriangle(p, c, describedPlace);
+
+						System.out.println(describedPlace); //testutskrift
+
 						break;
 					}
 
@@ -382,14 +397,13 @@ public class Main extends JFrame {
 		}
 	}
 
-	class LoadLyss implements ActionListener{
-		public void actionPerformed(ActionEvent ave){
+	class LoadLyss implements ActionListener {
+		public void actionPerformed(ActionEvent ave) {
 			Place loadedPlace = null;
 
-			if(loadedPlaces && changed) {
-				int answer = JOptionPane.showConfirmDialog(Main.this,
-						"Unsaved changes, do you still want to continue?",
-						"Warning", JOptionPane.OK_CANCEL_OPTION);
+			if (loadedPlaces && changed) {
+				int answer = JOptionPane.showConfirmDialog(Main.this, "Unsaved changes, do you still want to continue?",
+					"Warning", JOptionPane.OK_CANCEL_OPTION);
 				if (answer != JOptionPane.OK_OPTION) {
 					return;
 				}
@@ -415,7 +429,7 @@ public class Main extends JFrame {
 				String line;
 
 				while ((line = in.readLine()) != null) {
-					String[] tokens = line.split(",");  //splitta upp strängen på kommatecken
+					String[] tokens = line.split(","); //splitta upp strängen på kommatecken
 					String type = tokens[0];
 					Category category = Category.parseCategory(tokens[1]);
 					int x = Integer.parseInt(tokens[2]);
@@ -446,15 +460,15 @@ public class Main extends JFrame {
 
 			} catch (FileNotFoundException e) {
 				JOptionPane.showMessageDialog(Main.this, "File cannot be opened");
-			} catch (IOException ei){
+			} catch (IOException ei) {
 				JOptionPane.showMessageDialog(Main.this, "Error " + ei.getMessage());
-			}   // indexOutOfBounds ifall det inte finns en till token, eller om det är fel typ (numberExceptions)
+			} // indexOutOfBounds ifall det inte finns en till token, eller om det är fel typ (numberExceptions)
 
 		}
 	}
 
-	class SaveLyss implements ActionListener{
-		public void actionPerformed(ActionEvent ave){
+	class SaveLyss implements ActionListener {
+		public void actionPerformed(ActionEvent ave) {
 
 			//Sökväg på min dator så kommer inte funka hos dig
 			File mapp = new File("/Users/tildas/IdeaProjects/inlupp2_git");
@@ -476,7 +490,7 @@ public class Main extends JFrame {
 				PrintWriter out = new PrintWriter(utfil);
 
 				// för att gå igenom när det är en Map = .values
-				for(Place p : placePerPosition.values()) {
+				for (Place p : placePerPosition.values()) {
 					out.println(p);
 				}
 
@@ -497,29 +511,27 @@ public class Main extends JFrame {
 	class ExitLyss extends WindowAdapter implements ActionListener {
 		//TODO: varnar användaren om det finns osparade ändringar när programmet avslutas
 
-		private void doIt(){
-			if (changed){
-				int answer = JOptionPane.showConfirmDialog(Main.this,
-						"Unsaved changes, do you still want to continue?",
-						"Warning", JOptionPane.OK_CANCEL_OPTION);
+		private void doIt() {
+			if (changed) {
+				int answer = JOptionPane.showConfirmDialog(Main.this, "Unsaved changes, do you still want to continue?",
+					"Warning", JOptionPane.OK_CANCEL_OPTION);
 				if (answer == JOptionPane.OK_OPTION) {
 					System.exit(0);
 				}
-			}
-			else
+			} else
 				System.exit(0);
 		}
+
 		@Override
-		public void windowClosing(WindowEvent wev){
+		public void windowClosing(WindowEvent wev) {
 			doIt();
 		}
-		public void actionPerformed(ActionEvent ave){
+
+		public void actionPerformed(ActionEvent ave) {
 			doIt();
 		}
 	}
 
-	 
-	 
 	private void run() {
 		fonster();
 	}
