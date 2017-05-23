@@ -272,8 +272,7 @@ public class Main extends JFrame {
 				return;
 			}
 		}
-		
-	
+
 
 		class KartLyss extends MouseAdapter {
 			@Override

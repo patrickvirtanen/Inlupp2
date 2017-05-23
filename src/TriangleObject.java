@@ -7,7 +7,7 @@ public class TriangleObject extends JComponent {
 	Position position;
 	Color col;
 	Place place;
-	boolean markerad = true;
+	boolean oMarkerad = true;
 
 	int[] xes; // = {0, 25, 50};
 	int[] yes; // = {0, 50, 0};
@@ -51,25 +51,25 @@ public class TriangleObject extends JComponent {
 	protected void paintComponent(Graphics g) {
 
 		super.paintComponent(g);
-		if (markerad) {
+		Graphics2D g2 = (Graphics2D) g;
+		if (oMarkerad) {
 			g.setColor(col);
 			g.fillPolygon(xes, yes, 3);
 			g.drawPolygon(p);
-			
 
 		} else {
-			g.setColor(Color.black);
+			g.setColor(col);
 			g.fillPolygon(xes, yes, 3);
-			
-			
+			g.setColor(Color.BLACK);
+			g2.setStroke(new BasicStroke(3));
+			g.drawPolygon(xes, yes, 3);
 
 		}
 	}
 	
 
 	public void setMarked() {
-		markerad = !markerad;
-//		b = !b;
+		oMarkerad = !oMarkerad;
 		repaint();
 	}
 }

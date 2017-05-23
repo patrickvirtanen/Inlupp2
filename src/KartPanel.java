@@ -20,9 +20,10 @@ public class KartPanel extends JPanel {
 	int scale = 1;
 	private Position position;
 	int x, y;
-	private boolean marked = false;
-	private ArrayList<TriangleObject> temp = new ArrayList<TriangleObject>();
-	private Map<Position, Place> placePerPosition = new HashMap<>();
+	private boolean marked = true;
+	private TriangleObject triangle;
+	private Map<Position, Place> markedPlacePerPosition = new HashMap<>();
+	private Map<TriangleObject, Place> markedPlacePerPosition2 = new HashMap<>();
 
 	public KartPanel(String filnamn) {
 		bild = new ImageIcon(filnamn);
@@ -39,36 +40,21 @@ public class KartPanel extends JPanel {
 
 	public void paintTriangle(Position p, Category cat, Place pla) { // public Place
 		position = p;
-		TriangleObject tro = new TriangleObject(this, p, cat, pla);
-		tro.addMouseListener(new TriangelLyss());
-		add(tro);
+		triangle = new TriangleObject(this, p, cat, pla);
+		triangle.addMouseListener(new TriangelLyss());
+		add(triangle);
 		validate();
 		repaint();
 		System.out.println("TRIANGEL");
-	}
-
-	public void removePlaces() {
-		for (TriangleObject t : temp)
-			temp.remove(t);
-
 	}
 
 	class TriangelLyss extends MouseAdapter {
 
 		@Override
 		public void mouseClicked(MouseEvent mev) {
-			TriangleObject triangle = (TriangleObject) mev.getSource(); //för att se vilken triangel som är klickad
+			triangle = (TriangleObject) mev.getSource(); //för att se vilken triangel som är klickad
 			triangle.setMarked();
-			marked = true;
-			if (marked = true) {
-				placePerPosition.put(triangle.position, triangle.place);
-				provMark();
-			} else {
-				placePerPosition.remove(triangle.position, triangle.place);
-				System.out.println(triangle);
-			}
 
-			triangle.repaint();
 
 			if (SwingUtilities.isRightMouseButton(mev)) {
 				if (triangle.place instanceof NamedPlace) {
@@ -80,24 +66,45 @@ public class KartPanel extends JPanel {
 					JOptionPane.showMessageDialog(null, meddelande, "Platsinfo", JOptionPane.OK_OPTION);
 				}
 
+			} else if (SwingUtilities.isLeftMouseButton(mev)) {
+
+				if (marked == true) {
+					markedPlacePerPosition.put(triangle.position, triangle.place);
+					markedPlacePerPosition2.put(triangle, triangle.place);
+					provMark();
+				} else {
+					markedPlacePerPosition.remove(triangle.position, triangle.place);
+					markedPlacePerPosition2.remove(triangle, triangle.place);
+					System.out.println(marked);
+				}
+
+				marked = !marked;
 			}
 
 		}
 
 		public void provMark() {
 
-			for (Map.Entry<Position, Place> entry : placePerPosition.entrySet()) {
+			for (Map.Entry<Position, Place> entry : markedPlacePerPosition.entrySet()) {
 				System.out.printf("Key : %s and Value: %s %n", entry.getKey(), entry.getValue());
+
+				System.out.println(marked);
 			}
 		}
 	}
 	
 	public void removeAllMarked(){
 		
-		System.out.println(placePerPosition.toString());
-		placePerPosition.clear();
+		//System.out.println(markedPlacePerPosition.toString());
+
 		System.out.println("********************");
-		System.out.println(placePerPosition.toString());
+		//System.out.println(markedPlacePerPosition.toString());
+
+		for (Map.Entry<TriangleObject, Place> entry : markedPlacePerPosition2.entrySet()) {
+			this.remove(entry.getKey());
+		}
+		this.repaint();
+		markedPlacePerPosition2.clear();
 	}
 
 	protected void paintComponent(Graphics g) {
