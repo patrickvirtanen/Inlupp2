@@ -53,8 +53,7 @@ public class KartPanel extends JPanel {
 		@Override
 		public void mouseClicked(MouseEvent mev) {
 			triangle = (TriangleObject) mev.getSource(); //för att se vilken triangel som är klickad
-			triangle.setMarked();
-
+			boolean markerad = triangle.getMarked();
 
 			if (SwingUtilities.isRightMouseButton(mev)) {
 				if (triangle.place instanceof NamedPlace) {
@@ -67,18 +66,16 @@ public class KartPanel extends JPanel {
 				}
 
 			} else if (SwingUtilities.isLeftMouseButton(mev)) {
-
-				if (marked == true) {
+				if (markerad == true) {
 					markedPlacePerPosition.put(triangle.position, triangle.place);
 					markedPlacePerPosition2.put(triangle, triangle.place);
 					provMark();
 				} else {
 					markedPlacePerPosition.remove(triangle.position, triangle.place);
 					markedPlacePerPosition2.remove(triangle, triangle.place);
-					System.out.println(marked);
+					System.out.println(markerad);
 				}
-
-				marked = !marked;
+				triangle.setMarked(markerad);
 			}
 
 		}

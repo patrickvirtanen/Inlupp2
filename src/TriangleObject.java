@@ -68,8 +68,12 @@ public class TriangleObject extends JComponent {
 	}
 	
 
-	public void setMarked() {
-		oMarkerad = !oMarkerad;
+	public void setMarked(boolean marked) {
+		oMarkerad = !marked;
 		repaint();
+	}
+
+	public boolean getMarked() {
+		return oMarkerad;
 	}
 }
