@@ -7,7 +7,7 @@ public class TriangleObject extends JComponent {
 	Position position;
 	Color col;
 	Place place;
-	boolean oMarkerad = true;
+	boolean markerad = false;
 
 	int[] xes; // = {0, 25, 50};
 	int[] yes; // = {0, 50, 0};
@@ -15,11 +15,11 @@ public class TriangleObject extends JComponent {
 	int x, x1, x2, y, y1, y2;
 	int triangelRadie = 15;
 
-	public TriangleObject(KartPanel kp, Position pos, Category cat, Place pla) {
+	public TriangleObject(Place pla) {
 		p = new Polygon();
 		place = pla;
 
-		position = pos;
+		position = place.getPosition();
 
 		x = position.getPositionX();
 		y = position.getPositionY();
@@ -43,7 +43,7 @@ public class TriangleObject extends JComponent {
 		p.xpoints = xes;
 		p.ypoints = yes;
 		p.npoints = 3;
-		this.col = cat.getColor();
+		this.col = place.getCategory().getColor();
 
 	}
 
@@ -52,28 +52,30 @@ public class TriangleObject extends JComponent {
 
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
-		if (oMarkerad) {
-			g.setColor(col);
-			g.fillPolygon(xes, yes, 3);
-			g.drawPolygon(p);
-
-		} else {
+		if (markerad) {
 			g.setColor(col);
 			g.fillPolygon(xes, yes, 3);
 			g.setColor(Color.BLACK);
 			g2.setStroke(new BasicStroke(3));
 			g.drawPolygon(xes, yes, 3);
-
+		} else {
+			g.setColor(col);
+			g.fillPolygon(xes, yes, 3);
+			g.drawPolygon(p);
 		}
 	}
 	
-
+	//Skickar en in true så blir triangeln markerad, och vice versa
 	public void setMarked(boolean marked) {
-		oMarkerad = !marked;
+		markerad = marked;
 		repaint();
 	}
 
 	public boolean getMarked() {
-		return oMarkerad;
+		return markerad;
+	}
+
+	public Place getPlace() {
+		return place;
 	}
 }

@@ -8,6 +8,26 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.util.*;
 import java.util.List;
 
+
+
+/*
+
+KRITISKT
+* [x] om plats döljs ska den även avmarkeras
+* [x] om plats söks på namn ska den markeras så det går att dölja den direkt
+* [ ] användaren ska kunna söka på koordinater
+    * [ ] denna sökruta ska kontrollera att input är numerisk
+    * [ ] annars typ samma som sökning på namn?
+* [ ] felmeddelande ska visas om plats redan finns på position
+* [ ] knappen hide category ska gömma alla platser som hör till vald kategori
+* [ ] när kategori väljs i listan ska platser som hör till den kategorin visas
+
+STRUNTSAKER
+* [ ] annan färg för att markera svarta platser? (ifsats för att sätta till vit kant om none)
+* [x] filväljaren ska vara inställd på alla filer när användaren laddar platser
+
+ */
+
 public class Main extends JFrame {
 
 	private JMenuBar mb = new JMenuBar();
@@ -30,8 +50,8 @@ public class Main extends JFrame {
 	// Skapa ny "ordbok" för att slå upp vilka platser som har en kategori
 	private Map<Category, Set<Place>> categoryPlaces = new HashMap<>();
 
-	// För sökning av Plats på namn
-	private Map<String, List<Place>> placePerName = new HashMap<>();
+	//För sökning av Plats på namn, men går via platsens triangel (ersätter placePerName)
+	private Map<String, List<TriangleObject>> triangelPerName = new HashMap<>();
 
 	// För sökning av Plats på Position
 	private Map<Position, Place> placePerPosition = new HashMap<>();
@@ -101,7 +121,7 @@ public class Main extends JFrame {
 
 		JButton hideKnapp = new JButton("Hide");
 		topPanel.add(hideKnapp);
-		//visaKnapp.addActionListener(new VisaLyss());
+		hideKnapp.addActionListener(new HideLyss());
 
 		JButton removeKnapp = new JButton("Remove");
 		topPanel.add(removeKnapp);
@@ -134,7 +154,11 @@ public class Main extends JFrame {
 
 	class RemoveLyss implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			fv.removeAllMarked();
+			List<TriangleObject> removedTriangles = fv.removeAllMarked();
+
+			for (TriangleObject triangle : removedTriangles) {
+				removePlace(triangle.getPlace());
+			}
 		}
 	}
 
@@ -192,9 +216,10 @@ public class Main extends JFrame {
 		}
 	}
 
-	//TODO: metod för att se vilka platser som är markerade
-	public void markedTriangle(){
-		
+	class HideLyss implements ActionListener {
+		public void actionPerformed(ActionEvent ave) {
+			fv.hideTriangle();
+		}
 	}
 
 	//TODO: metod för att lägga till ny plats i alla datastrukturer som krävs
@@ -204,12 +229,16 @@ public class Main extends JFrame {
 
 		// Addera till placePerName (platser med samma namn)
 		String name = p.getName();
-		List<Place> sameName = placePerName.get(name);
+		List<TriangleObject> sameName = triangelPerName.get(name);
+
+		TriangleObject triangle = fv.paintTriangle(p);
+
 		if (sameName == null) {
-			sameName = new ArrayList<Place>();
-			placePerName.put(name, sameName);
+			sameName = new ArrayList<TriangleObject>();
+			triangelPerName.put(name, sameName);
+
 		}
-		sameName.add(p);
+		sameName.add(triangle);
 
 		// Hämta ut mängden för kategorin, och lägg till p i den
 		categoryPlaces.get(p.getCategory()).add(p);
@@ -217,41 +246,27 @@ public class Main extends JFrame {
 		//Platserna är förändrade i jämförelse med den sparade filen (finns nya platser)
 		changed = true;
 
-		fv.paintTriangle(p.getPosition(), p.getCategory(), p);
+
 	}
 
 	//TODO: metod för att ta bort alla markerade platser från alla datastrukturer som behövs
 	private void removePlace(Place p) {
-		placePerPosition.remove(p.getPosition(),p);
-		String name = p.getName();
-		List<Place> sameName = placePerName.remove(name);
+		placePerPosition.remove(p.getPosition(), p);
 
+		String name = p.getName();
+		List<TriangleObject> sameName = triangelPerName.get(name);
 		sameName.remove(p);
 
-		// Hämta ut mängden för kategorin, och lägg till p i den
-		categoryPlaces.get(p.getCategory()).remove(p);
+		if (sameName.isEmpty()) {
+			triangelPerName.remove(name);
+		}
 
-		//TODO: för varje markerad plats, ta bort
-		//		for() {
-		//			// Ta bort från platser
-		//			placePerPosition.remove(pnr);
-		//
-		//			// Ta bort från placePerName
-		//			String name = p.getName();
-		//			List<Place> sameName = placePerName.get(name);
-		//			sameName.remove(p);
-		//
-		//			// Om ingen längre har det namnet, ta bort namnlistan
-		//			if (sameName.isEmpty()) {
-		//				placePerName.remove(name);
-		//			}
-		//		}
+		// Hämta ut mängden för kategorin, och ta bort p från den
+		categoryPlaces.get(p.getCategory()).remove(p);
 
 		//Platserna är förändrade i jämförelse med den sparade filen (platser tagits bort)
 		changed = true;
 	}
-
-	//TODO: metod för att gömma alla markerade platser
 
 	class NewLyss implements ActionListener {
 
@@ -286,9 +301,8 @@ public class Main extends JFrame {
 				int y = e.getY();
 				Position p = new Position(x, y);
 
-				//TODO: välja datastruktur för position
 				//TODO: felhantering för position
-				// if-sats ifall positionen redan finns, annars komma upp formulär
+				// TODO: if-sats ifall positionen redan finns, annars komma upp formulär
 				// anropa platskonstruktor efter formulär
 
 				Category c = list.getSelectedValue();
@@ -319,8 +333,6 @@ public class Main extends JFrame {
 //						removePlace(namedPlace);
 //						System.out.println("nu är denna borttagen " + namedPlace);
 						//Måste kunna skicka med namedPlace till removePlace på något sätt.
-						
-
 
 						System.out.println(namedPlace); //testutskrift
 						break;
@@ -347,11 +359,6 @@ public class Main extends JFrame {
 						describedPlace = new DescribedPlace(description, name, p, c);
 						addPlace(describedPlace);
 
-
-						fv.paintTriangle(p, c, describedPlace);
-
-						System.out.println(describedPlace); //testutskrift
-
 						break;
 					}
 
@@ -367,23 +374,24 @@ public class Main extends JFrame {
 
 	class SearchLyss implements ActionListener {
 		public void actionPerformed(ActionEvent ave) {
-			//TODO: börja med att avmarkera alla ev markerade platser
-
-			//TODO: visa samt markera alla platser som matchar söksträngen
 
 			String searchedPlace = textSearch.getText();
 
-			List<Place> sameName = placePerName.get(searchedPlace);
+			List<TriangleObject> sameName = triangelPerName.get(searchedPlace);
 
 			if (sameName == null) {
 				JOptionPane.showMessageDialog(null, "No existing place with that name!", "Error", JOptionPane.ERROR_MESSAGE);
 				textSearch.setText("Search");
 				return;
 			} else {
-				for (Place p: sameName) {
-					//TODO: anropa metod som visar platsen
+				//börja med att avmarkera alla ev markerade platser
+				fv.unMark();
+				for (TriangleObject triangle: sameName) {
+					//anropa metod som visar platsen
+					triangle.setVisible(true);
 
-					//TODO: anropa metod som markerar platsen
+					//anropa metod som markerar platsen
+					fv.mark(triangle);
 				}
 			}
 
@@ -411,6 +419,7 @@ public class Main extends JFrame {
 			//Sökväg på min dator så kommer inte funka hos dig
 			File mapp = new File("/Users/tildas/IdeaProjects/inlupp2_git");
 			//File mapp = new File("C:/Users/patri/Downloads");
+			jfc = new JFileChooser();
 			jfc.setCurrentDirectory(mapp);
 
 			int svar = jfc.showOpenDialog(Main.this);
@@ -453,6 +462,8 @@ public class Main extends JFrame {
 					}
 					loadedPlaces = true;
 				}
+
+				changed = false;
 
 				in.close();
 				infil.close();

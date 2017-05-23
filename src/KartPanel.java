@@ -7,10 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.List;
 
 public class KartPanel extends JPanel {
 
@@ -18,12 +16,8 @@ public class KartPanel extends JPanel {
 	private JFrame f;
 	ImageIcon bild;
 	int scale = 1;
-	private Position position;
-	int x, y;
-	private boolean marked = true;
-	private TriangleObject triangle;
-	private Map<Position, Place> markedPlacePerPosition = new HashMap<>();
-	private Map<TriangleObject, Place> markedPlacePerPosition2 = new HashMap<>();
+
+	private List<TriangleObject> markedTriangles = new ArrayList<>();
 
 	public KartPanel(String filnamn) {
 		bild = new ImageIcon(filnamn);
@@ -38,21 +32,21 @@ public class KartPanel extends JPanel {
 		setOpaque(false);
 	}
 
-	public void paintTriangle(Position p, Category cat, Place pla) { // public Place
-		position = p;
-		triangle = new TriangleObject(this, p, cat, pla);
+	public TriangleObject paintTriangle(Place pla) { // public Place
+		Position position = pla.getPosition();
+		TriangleObject triangle = new TriangleObject(pla);
 		triangle.addMouseListener(new TriangelLyss());
 		add(triangle);
 		validate();
 		repaint();
-		System.out.println("TRIANGEL");
+		return triangle;
 	}
 
 	class TriangelLyss extends MouseAdapter {
 
 		@Override
 		public void mouseClicked(MouseEvent mev) {
-			triangle = (TriangleObject) mev.getSource(); //för att se vilken triangel som är klickad
+			TriangleObject triangle = (TriangleObject) mev.getSource(); //för att se vilken triangel som är klickad
 			boolean markerad = triangle.getMarked();
 
 			if (SwingUtilities.isRightMouseButton(mev)) {
@@ -66,42 +60,50 @@ public class KartPanel extends JPanel {
 				}
 
 			} else if (SwingUtilities.isLeftMouseButton(mev)) {
-				if (markerad == true) {
-					markedPlacePerPosition.put(triangle.position, triangle.place);
-					markedPlacePerPosition2.put(triangle, triangle.place);
-					provMark();
+				if (markerad == false) {
+					markedTriangles.add(triangle);
+					System.out.println(markerad);
 				} else {
-					markedPlacePerPosition.remove(triangle.position, triangle.place);
-					markedPlacePerPosition2.remove(triangle, triangle.place);
+					markedTriangles.remove(triangle);
 					System.out.println(markerad);
 				}
-				triangle.setMarked(markerad);
+				triangle.setMarked(!markerad);
 			}
 
-		}
-
-		public void provMark() {
-
-			for (Map.Entry<Position, Place> entry : markedPlacePerPosition.entrySet()) {
-				System.out.printf("Key : %s and Value: %s %n", entry.getKey(), entry.getValue());
-
-				System.out.println(marked);
-			}
 		}
 	}
 	
-	public void removeAllMarked(){
-		
-		//System.out.println(markedPlacePerPosition.toString());
-
-		System.out.println("********************");
-		//System.out.println(markedPlacePerPosition.toString());
-
-		for (Map.Entry<TriangleObject, Place> entry : markedPlacePerPosition2.entrySet()) {
-			this.remove(entry.getKey());
+	public List<TriangleObject> removeAllMarked(){
+		for (TriangleObject triangle : markedTriangles) {
+			this.remove(triangle);
 		}
+		List<TriangleObject> removedTriangles = new ArrayList<>(markedTriangles);
+		markedTriangles.clear();
 		this.repaint();
-		markedPlacePerPosition2.clear();
+
+		return removedTriangles;
+	}
+
+	public void unMark() {
+		for (TriangleObject triangle : markedTriangles) {
+			triangle.setMarked(false);
+		}
+		markedTriangles.clear();
+		this.repaint();
+	}
+
+	public void mark(TriangleObject triangle) {
+		triangle.setMarked(true);
+		markedTriangles.add(triangle);
+		this.repaint();
+	}
+
+	public void hideTriangle() {
+		for (TriangleObject triangle : markedTriangles) {
+			triangle.setVisible(false);
+		}
+		this.unMark();
+		this.repaint();
 	}
 
 	protected void paintComponent(Graphics g) {
