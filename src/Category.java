@@ -33,11 +33,6 @@ public enum Category {
 				return Category.None;
 		}
 	}
-	
-	public void paintTriangle(Category c){
-		
-		
-	}
 
 }
 

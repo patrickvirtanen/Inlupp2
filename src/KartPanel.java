@@ -19,6 +19,7 @@ public class KartPanel extends JPanel {
 
 	//Ändrade till en lista istället för HashMap för de markerade trianglarna
 	private List<TriangleObject> markedTriangles = new ArrayList<>();
+	private List<TriangleObject> allTriangles = new ArrayList<>();
 
 	public KartPanel(String filnamn) {
 		bild = new ImageIcon(filnamn);
@@ -38,6 +39,7 @@ public class KartPanel extends JPanel {
 		TriangleObject triangle = new TriangleObject(pla);
 		triangle.addMouseListener(new TriangelLyss());
 		add(triangle);
+		allTriangles.add(triangle);
 		validate();
 		repaint();
 		return triangle;
@@ -84,20 +86,30 @@ public class KartPanel extends JPanel {
 
 		return removedTriangles;
 	}
+	
+	public void unMarkAllTriangles(){
+		for (TriangleObject triangle : allTriangles) {
+			triangle.setMarked(false);
+		}
+		
+		this.repaint();
+	}
 
 	public void unMark() {
+		
 		for (TriangleObject triangle : markedTriangles) {
 			triangle.setMarked(false);
 		}
-//		markedTriangles.clear(); //För att min funktion catagoryLyss i main
-								// skulle fungera var jag tvungen att blocka denna
-								// Jag vet att du sa att den fuckar upp saker, men
-								// Hittade ingen annan lösning :/
+//				markedTriangles.clear(); //För att min funktion catagoryLyss i main
+		// skulle fungera var jag tvungen att blocka denna
+		// Jag vet att du sa att den fuckar upp saker, men
+		// Hittade ingen annan lösning :/
 		this.repaint();
 	}
 
 	public void mark(TriangleObject triangle) {
 		triangle.setMarked(true);
+		allTriangles.add(triangle);
 		markedTriangles.add(triangle);
 		this.repaint();
 	}
@@ -106,17 +118,32 @@ public class KartPanel extends JPanel {
 		for (TriangleObject triangle : markedTriangles) {
 			triangle.setVisible(false);
 		}
-		this.unMark();
+//		this.unMark();
+		this.repaint();
+	}
+
+	public void hideCatTriangle(Category c) {
+
+		for (TriangleObject triangle : allTriangles) {
+
+			if (c.getColor().equals(triangle.col)) {
+				triangle.setVisible(false);
+				System.out.println("Slutet på for-loopen");
+				markedTriangles.add(triangle);
+				//Göm trianglarna i catTriangle
+				//Rensa listan
+			}
+	
+		}
+		this.unMarkAllTriangles();
 		this.repaint();
 	}
 
 	public void showTriangle(Category c) {
 		for (TriangleObject triangle : markedTriangles) {
-			if(c.getColor() == triangle.col){
+			if (c.getColor() == triangle.col) {
 				triangle.setVisible(true);
 			}
-			
-			System.out.println("Inne i showT" + triangle);
 		}
 		this.unMark();
 		this.repaint();

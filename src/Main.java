@@ -97,6 +97,7 @@ public class Main extends JFrame {
 		mittPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		add(mittPanel, BorderLayout.CENTER);
+		mittPanel.addMouseListener(new ClickLyss());
 
 		JButton newKnapp = new JButton("New");
 		topPanel.add(newKnapp);
@@ -138,6 +139,7 @@ public class Main extends JFrame {
 
 		JButton hidecat = new JButton("Hide Category");
 		eastPanel.add(hidecat);
+		hidecat.addActionListener(new HideCatLyss());
 
 		setSize(1000, 500);
 		//pack();
@@ -215,8 +217,34 @@ public class Main extends JFrame {
 	class HideLyss implements ActionListener {
 		public void actionPerformed(ActionEvent ave) {
 			fv.hideTriangle();
+			list.clearSelection();
+		
 		}
 	}
+	
+	class ClickLyss extends MouseAdapter{
+		public void mouseClicked(MouseEvent e){
+			list.clearSelection();
+			//om e.getSource är lika med fv rensa JList
+		}
+	}
+	public void clickedPic(){
+		//Om man klickar på bilden rensa JList
+		
+	}
+	
+	class HideCatLyss implements ActionListener {
+		public void actionPerformed(ActionEvent ave) {
+			Category c = list.getSelectedValue();
+			//select all triangles for c
+			//Hide those triangles
+			fv.hideCatTriangle(c);
+			list.clearSelection();
+			
+			
+		}
+	}
+	
 
 	//TODO: metod för att lägga till ny plats i alla datastrukturer som krävs
 	private void addPlace(Place p) {
@@ -266,10 +294,9 @@ public class Main extends JFrame {
 	class CategoryLyss extends MouseAdapter {
 		public void mouseClicked(MouseEvent e) {
 			Category c = list.getSelectedValue();
-			Place p;
+			fv.showTriangle(c); 
 			Map<Category, List<TriangleObject>> categoryShow = new HashMap<>();
-			boolean visa = true;
-			TriangleObject to;
+			
 				
 			for(Map.Entry<String,List<TriangleObject>> entry : triangelPerName.entrySet()){
 //			    System.out.printf(""+entry.getKey());
@@ -280,9 +307,8 @@ public class Main extends JFrame {
 				fv.showTriangle(c);
 				}
 			}
+			categoryShow.clear(); //Tömmer den temporära listan categoryShow.
 			
-			categoryShow.clear();
-			System.out.println(categoryShow.toString());
 			}
 		
 			
