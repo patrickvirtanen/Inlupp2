@@ -33,7 +33,7 @@ public class KartPanel extends JPanel {
 		setOpaque(false);
 	}
 
-	public TriangleObject paintTriangle(Place pla) { // public Place
+	public TriangleObject paintTriangle(Place pla) {
 		Position position = pla.getPosition();
 		TriangleObject triangle = new TriangleObject(pla);
 		triangle.addMouseListener(new TriangelLyss());
@@ -73,13 +73,13 @@ public class KartPanel extends JPanel {
 
 		}
 	}
-	
-	public List<TriangleObject> removeAllMarked(){
+
+	public List<TriangleObject> removeAllMarked() {
 		for (TriangleObject triangle : markedTriangles) {
 			this.remove(triangle);
 		}
 		List<TriangleObject> removedTriangles = new ArrayList<>(markedTriangles); //gör en kompia på markedTriangles så att
-		markedTriangles.clear();                                        // den kan clearas och den kopian returneras
+		markedTriangles.clear(); // den kan clearas och den kopian returneras
 		this.repaint();
 
 		return removedTriangles;
@@ -89,7 +89,10 @@ public class KartPanel extends JPanel {
 		for (TriangleObject triangle : markedTriangles) {
 			triangle.setMarked(false);
 		}
-		markedTriangles.clear();
+//		markedTriangles.clear(); //För att min funktion catagoryLyss i main
+								// skulle fungera var jag tvungen att blocka denna
+								// Jag vet att du sa att den fuckar upp saker, men
+								// Hittade ingen annan lösning :/
 		this.repaint();
 	}
 
@@ -102,6 +105,18 @@ public class KartPanel extends JPanel {
 	public void hideTriangle() {
 		for (TriangleObject triangle : markedTriangles) {
 			triangle.setVisible(false);
+		}
+		this.unMark();
+		this.repaint();
+	}
+
+	public void showTriangle(Category c) {
+		for (TriangleObject triangle : markedTriangles) {
+			if(c.getColor() == triangle.col){
+				triangle.setVisible(true);
+			}
+			
+			System.out.println("Inne i showT" + triangle);
 		}
 		this.unMark();
 		this.repaint();

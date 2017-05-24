@@ -8,7 +8,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.util.*;
 import java.util.List;
 
-
 /*
 
 KRITISKT
@@ -18,7 +17,7 @@ KRITISKT
     * [ ] annars typ samma som sökning på namn?
 * [ ] felmeddelande ska visas om plats redan finns på position
 * [ ] knappen hide category ska gömma alla platser som hör till vald kategori
-* [ ] när kategori väljs i listan ska platser som hör till den kategorin visas
+* [X] när kategori väljs i listan ska platser som hör till den kategorin visas
 
 STRUNTSAKER
 * [ ] annan färg för att markera svarta platser? (ifsats för att sätta till vit kant om none)
@@ -38,10 +37,9 @@ public class Main extends JFrame {
 	private JRadioButton described = new JRadioButton("Described", false);
 	private ButtonGroup buttonGroup = new ButtonGroup();
 
-
 	private JTextField textSearch;
 
-	private Category[] categoryList = {Category.Bus, Category.Train, Category.Underground};
+	private Category[] categoryList = { Category.Bus, Category.Train, Category.Underground };
 
 	private JList<Category> list;
 	// Skapa ny "ordbok" för att slå upp vilka platser som har en kategori
@@ -133,6 +131,7 @@ public class Main extends JFrame {
 
 		list = new JList<>(categoryList);
 		eastPanel.add(list);
+		list.addMouseListener(new CategoryLyss());
 
 		JScrollPane scroll = new JScrollPane(list);
 		eastPanel.add(scroll);
@@ -154,7 +153,7 @@ public class Main extends JFrame {
 			List<TriangleObject> removedTriangles = fv.removeAllMarked(); //Hämtar listan på borttagna trianglar
 
 			for (TriangleObject triangle : removedTriangles) {
-				removePlace(triangle.getPlace());   //Anropar removePlace-metoden och skickar med tringelns Place
+				removePlace(triangle.getPlace()); //Anropar removePlace-metoden och skickar med tringelns Place
 			}
 		}
 	}
@@ -243,7 +242,6 @@ public class Main extends JFrame {
 		//Platserna är förändrade i jämförelse med den sparade filen (finns nya platser)
 		changed = true;
 
-
 	}
 
 	//TODO: metod för att ta bort alla markerade platser från alla datastrukturer som behövs
@@ -265,6 +263,36 @@ public class Main extends JFrame {
 		changed = true;
 	}
 
+	class CategoryLyss extends MouseAdapter {
+		public void mouseClicked(MouseEvent e) {
+			Category c = list.getSelectedValue();
+			Place p;
+			Map<Category, List<TriangleObject>> categoryShow = new HashMap<>();
+			boolean visa = true;
+			TriangleObject to;
+				
+			for(Map.Entry<String,List<TriangleObject>> entry : triangelPerName.entrySet()){
+//			    System.out.printf(""+entry.getKey());
+			for(Map.Entry<Category,Set<Place>> entryCat : categoryPlaces.entrySet()){
+//			    System.out.printf(""+entry.getKey());
+				if(c.equals(entryCat.getKey())){
+				categoryShow.put(entryCat.getKey(), entry.getValue());
+				fv.showTriangle(c);
+				}
+			}
+			
+			categoryShow.clear();
+			System.out.println(categoryShow.toString());
+			}
+		
+			
+	
+			
+			
+			
+		}
+	}
+
 	class NewLyss implements ActionListener {
 
 		public void actionPerformed(ActionEvent actionEvent) {
@@ -284,7 +312,6 @@ public class Main extends JFrame {
 				return;
 			}
 		}
-
 
 		class KartLyss extends MouseAdapter {
 			@Override
@@ -327,8 +354,8 @@ public class Main extends JFrame {
 						namedPlace = new NamedPlace(name, p, c);
 						addPlace(namedPlace);
 						System.out.println("nu är denna tillagd " + namedPlace);
-//						removePlace(namedPlace);
-//						System.out.println("nu är denna borttagen " + namedPlace);
+						//						removePlace(namedPlace);
+						//						System.out.println("nu är denna borttagen " + namedPlace);
 						//Måste kunna skicka med namedPlace till removePlace på något sätt.
 
 						System.out.println(namedPlace); //testutskrift
@@ -377,13 +404,14 @@ public class Main extends JFrame {
 			List<TriangleObject> sameName = triangelPerName.get(searchedPlace);
 
 			if (sameName == null) {
-				JOptionPane.showMessageDialog(null, "No existing place with that name!", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "No existing place with that name!", "Error",
+					JOptionPane.ERROR_MESSAGE);
 				textSearch.setText("Search");
 				return;
 			} else {
 				//börja med att avmarkera alla ev markerade platser
 				fv.unMark();
-				for (TriangleObject triangle: sameName) {
+				for (TriangleObject triangle : sameName) {
 					//anropa metod som visar platsen
 					triangle.setVisible(true);
 
@@ -395,11 +423,10 @@ public class Main extends JFrame {
 		}
 	}
 
-	class CoordinatesLyss implements ActionListener{
+	class CoordinatesLyss implements ActionListener {
 		public void actionPerformed(ActionEvent ave) {
 			CoordinatesForm coordniatesForm = new CoordinatesForm();
 			try {
-
 
 			} catch (NumberFormatException e) {
 
