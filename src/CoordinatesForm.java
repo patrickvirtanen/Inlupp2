@@ -1,10 +1,8 @@
 import javax.swing.*;
 
-/**
- * Created by tildas on 2017-05-22.
- */
 public class CoordinatesForm extends JPanel {
-	private JTextField x, y;
+	private JTextField x = new JTextField(5);
+	private JTextField y = new JTextField(5);
 
 	public CoordinatesForm() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -14,6 +12,14 @@ public class CoordinatesForm extends JPanel {
 		row1.add(x);
 		row1.add(new JLabel("Y: "));
 		row1.add(y);
+	}
+
+	public String getXField() {
+		return x.getText();
+	}
+
+	public String getYField() {
+		return y.getText();
 	}
 
 	public int getCoordinateX() {

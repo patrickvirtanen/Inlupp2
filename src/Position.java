@@ -23,15 +23,6 @@ public class Position extends JComponent {
 		return y;
 	}
 
-	//TODO: kan vi ta bort dessa metoder nedan?
-	public void setX(int x) {
-		this.x = x;
-	}
-
-	public void setY(int y) {
-		this.y = y;
-	}
-
 	public String getPosition() {
 		return x + "," + y;
 	}

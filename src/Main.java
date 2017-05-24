@@ -46,10 +46,12 @@ public class Main extends JFrame {
 	private Map<Category, Set<Place>> categoryPlaces = new HashMap<>();
 
 	//För sökning av Plats på namn, men går via platsens triangel (ersätter placePerName)
-	private Map<String, List<TriangleObject>> triangelPerName = new HashMap<>();
+	private Map<String, List<Place>> placePerName = new HashMap<>();
 
 	// För sökning av Plats på Position
+	// TODO: fylls inte denna i med värden?
 	private Map<Position, Place> placePerPosition = new HashMap<>();
+
 
 	//TODO: ha en datastruktur för att se markerade platser? Eller kolla det på något annat sätt?
 
@@ -152,10 +154,10 @@ public class Main extends JFrame {
 
 	class RemoveLyss implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			List<TriangleObject> removedTriangles = fv.removeAllMarked(); //Hämtar listan på borttagna trianglar
+			List<Place> removedPlaces = fv.removeAllMarked(); //Hämtar listan på borttagna trianglar
 
-			for (TriangleObject triangle : removedTriangles) {
-				removePlace(triangle.getPlace()); //Anropar removePlace-metoden och skickar med tringelns Place
+			for (Place place : removedPlaces) {
+				removePlace(place); //Anropar removePlace-metoden och skickar med tringelns Place
 			}
 		}
 	}
@@ -238,10 +240,15 @@ public class Main extends JFrame {
 			Category c = list.getSelectedValue();
 			//select all triangles for c
 			//Hide those triangles
+
+			if(c == null) {
+				fv.hideCatTriangle(Category.None);
+				return;
+			}
+
 			fv.hideCatTriangle(c);
 			list.clearSelection();
-			
-			
+
 		}
 	}
 	
@@ -253,16 +260,16 @@ public class Main extends JFrame {
 
 		// Addera till placePerName (platser med samma namn)
 		String name = p.getName();
-		List<TriangleObject> sameName = triangelPerName.get(name);
+		List<Place> sameName = placePerName.get(name);
 
-		TriangleObject triangle = fv.paintTriangle(p);
+		fv.paintTriangle(p);
 
 		if (sameName == null) {
-			sameName = new ArrayList<TriangleObject>();
-			triangelPerName.put(name, sameName);
+			sameName = new ArrayList<Place>();
+			placePerName.put(name, sameName);
 
 		}
-		sameName.add(triangle);
+		sameName.add(p);
 
 		// Hämta ut mängden för kategorin, och lägg till p i den
 		categoryPlaces.get(p.getCategory()).add(p);
@@ -277,11 +284,11 @@ public class Main extends JFrame {
 		placePerPosition.remove(p.getPosition(), p);
 
 		String name = p.getName();
-		List<TriangleObject> sameName = triangelPerName.get(name);
+		List<Place> sameName = placePerName.get(name);
 		sameName.remove(p);
 
 		if (sameName.isEmpty()) {
-			triangelPerName.remove(name);
+			placePerName.remove(name);
 		}
 
 		// Hämta ut mängden för kategorin, och ta bort p från den
@@ -295,10 +302,9 @@ public class Main extends JFrame {
 		public void mouseClicked(MouseEvent e) {
 			Category c = list.getSelectedValue();
 			fv.showTriangle(c); 
-			Map<Category, List<TriangleObject>> categoryShow = new HashMap<>();
-			
+			Map<Category, List<Place>> categoryShow = new HashMap<>();
 				
-			for(Map.Entry<String,List<TriangleObject>> entry : triangelPerName.entrySet()){
+			for(Map.Entry<String,List<Place>> entry : placePerName.entrySet()){
 //			    System.out.printf(""+entry.getKey());
 			for(Map.Entry<Category,Set<Place>> entryCat : categoryPlaces.entrySet()){
 //			    System.out.printf(""+entry.getKey());
@@ -310,11 +316,7 @@ public class Main extends JFrame {
 			categoryShow.clear(); //Tömmer den temporära listan categoryShow.
 			
 			}
-		
-			
-	
-			
-			
+
 			
 		}
 	}
@@ -427,7 +429,7 @@ public class Main extends JFrame {
 
 			String searchedPlace = textSearch.getText();
 
-			List<TriangleObject> sameName = triangelPerName.get(searchedPlace);
+			List<Place> sameName = placePerName.get(searchedPlace);
 
 			if (sameName == null) {
 				JOptionPane.showMessageDialog(null, "No existing place with that name!", "Error",
@@ -437,12 +439,12 @@ public class Main extends JFrame {
 			} else {
 				//börja med att avmarkera alla ev markerade platser
 				fv.unMark();
-				for (TriangleObject triangle : sameName) {
+				for (Place place : sameName) {
 					//anropa metod som visar platsen
-					triangle.setVisible(true);
+					place.setVisible(true);
 
 					//anropa metod som markerar platsen
-					fv.mark(triangle);
+					fv.mark(place);
 				}
 			}
 
@@ -452,12 +454,74 @@ public class Main extends JFrame {
 	class CoordinatesLyss implements ActionListener {
 		public void actionPerformed(ActionEvent ave) {
 			CoordinatesForm coordniatesForm = new CoordinatesForm();
-			try {
 
-			} catch (NumberFormatException e) {
+			while (true) {
+				int test = JOptionPane.showConfirmDialog(null, coordniatesForm, "New", JOptionPane.OK_CANCEL_OPTION);
+				if (test == 2 || test == -1) {
+					break;
+				}
 
+				try {
+					if (coordniatesForm.getXField() == null || coordniatesForm.getXField().equals("")) {
+						JOptionPane.showMessageDialog(null, "Choose your X-value", "Error", JOptionPane.ERROR_MESSAGE);
+						continue;
+					} else if (coordniatesForm.getYField() == null || coordniatesForm.getYField().equals("")) {
+						JOptionPane.showMessageDialog(null, "Choose your Y-value", "Error", JOptionPane.ERROR_MESSAGE);
+						continue;
+					} else if (coordniatesForm.getCoordinateX() < 0) {
+						JOptionPane.showMessageDialog(null, "Your X-value can't be less than zero", "Error", JOptionPane.ERROR_MESSAGE);
+						continue;
+					} else if (coordniatesForm.getCoordinateY() < 0) {
+						JOptionPane.showMessageDialog(null, "Your Y-value can't be less than zero", "Error", JOptionPane.ERROR_MESSAGE);
+						continue;
+					}
+
+					int xCoordinate = coordniatesForm.getCoordinateX();
+					int yCoordinate = coordniatesForm.getCoordinateY();
+
+					Position testPosition = new Position(xCoordinate, yCoordinate);
+					Place thePlace = checkPosition(testPosition);
+
+					//TODO: den hittar inte platsen med den inskriva positionen !!!
+					if (thePlace == null) {
+						JOptionPane.showMessageDialog(null, "No existing place with those coordinates!",
+								"Error", JOptionPane.ERROR_MESSAGE);
+						break;
+					} else {
+						fv.unMark();
+						//TODO objektet Position kan inte jämföras och vara sammalika??
+
+						thePlace.setVisible(true);
+						fv.mark(thePlace);
+
+						/*for (TriangleObject triangle: samePosition) {
+							//anropa metod som visar triangeln med samma namn och position
+							if (thePlace.getPosition().equals(testPosition)) {
+								triangle.setVisible(true);
+
+								//anropa metod som markerar platsen
+								fv.mark(triangle);
+							}
+						}*/
+						break;
+					}
+
+				} catch (NumberFormatException e) {
+					JOptionPane.showMessageDialog(null, "Wrong format!", "Error", JOptionPane.ERROR_MESSAGE);
+				}
 			}
+
 		}
+	}
+
+	public Place checkPosition(Position testPos) {      //returnerar Positionsobjektet om det finns
+
+		//Obs igen att vi tänker oss att antalet platser är stort, så denna operation behöver också en lämplig
+		// datastruktur där man snabbt kan få fram en plats med hjälp av dess position (eller få veta att det inte
+		// finns någon plats där). Denna datastruktur behövs även vid skapande av platser, för att kontrollera
+		// att det inte redan finns en plats på den klickade positionen.
+
+		return placePerPosition.get(testPos);   //Returnerar null om det inte finns någon plats med den positionen
 	}
 
 	class LoadLyss implements ActionListener {

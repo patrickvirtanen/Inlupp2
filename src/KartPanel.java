@@ -18,8 +18,8 @@ public class KartPanel extends JPanel {
 	int scale = 1;
 
 	//Ändrade till en lista istället för HashMap för de markerade trianglarna
-	private List<TriangleObject> markedTriangles = new ArrayList<>();
-	private List<TriangleObject> allTriangles = new ArrayList<>();
+	private List<Place> markedPlaces = new ArrayList<>();
+	private List<Place> allPlaces = new ArrayList<>();
 
 	public KartPanel(String filnamn) {
 		bild = new ImageIcon(filnamn);
@@ -34,72 +34,74 @@ public class KartPanel extends JPanel {
 		setOpaque(false);
 	}
 
-	public TriangleObject paintTriangle(Place pla) {
+	public void paintTriangle(Place pla) {
 		Position position = pla.getPosition();
-		TriangleObject triangle = new TriangleObject(pla);
-		triangle.addMouseListener(new TriangelLyss());
-		add(triangle);
-		allTriangles.add(triangle);
+		pla.addMouseListener(new TriangelLyss());
+		add(pla);
+		allPlaces.add(pla);
 		validate();
 		repaint();
-		return triangle;
 	}
 
 	class TriangelLyss extends MouseAdapter {
 
 		@Override
 		public void mouseClicked(MouseEvent mev) {
-			TriangleObject triangle = (TriangleObject) mev.getSource(); //för att se vilken triangel som är klickad
-			boolean markerad = triangle.getMarked();
+			Place place = (Place) mev.getSource(); //för att se vilken triangel som är klickad
+			boolean markerad = place.getMarked();
 
 			if (SwingUtilities.isRightMouseButton(mev)) {
-				if (triangle.place instanceof NamedPlace) {
-					String meddelande = triangle.place.getName() + " {" + triangle.place.getCoordinates() + "}";
+				if (place instanceof NamedPlace) {
+					String meddelande = place.getName() + " {" + place.getCoordinates() + "}";
 					JOptionPane.showMessageDialog(null, meddelande, "Platsinfo", JOptionPane.OK_OPTION);
-				} else if (triangle.place instanceof DescribedPlace) {
-					String meddelande = "Name: " + triangle.place.getName() + " {" + triangle.place.getCoordinates()
-						+ "} \nDescription: " + ((DescribedPlace) triangle.place).getDescription();
+				} else if (place instanceof DescribedPlace) {
+					String meddelande = "Name: " + place.getName() + " {" + place.getCoordinates()
+						+ "} \nDescription: " + ((DescribedPlace) place).getDescription();
 					JOptionPane.showMessageDialog(null, meddelande, "Platsinfo", JOptionPane.OK_OPTION);
 				}
 
 			} else if (SwingUtilities.isLeftMouseButton(mev)) {
 				if (markerad == false) {
-					markedTriangles.add(triangle);
+					markedPlaces.add(place);
 					System.out.println(markerad);
 				} else {
-					markedTriangles.remove(triangle);
+					markedPlaces.remove(place);
 					System.out.println(markerad);
 				}
-				triangle.setMarked(!markerad);
+				place.setMarked(!markerad);
 			}
 
 		}
 	}
 
-	public List<TriangleObject> removeAllMarked() {
-		for (TriangleObject triangle : markedTriangles) {
-			this.remove(triangle);
+	public List<Place> removeAllMarked() {
+		for (Place place : markedPlaces) {
+			this.remove(place);
 		}
-		List<TriangleObject> removedTriangles = new ArrayList<>(markedTriangles); //gör en kompia på markedTriangles så att
-		markedTriangles.clear(); // den kan clearas och den kopian returneras
+		List<Place> removedPlaces = new ArrayList<>(markedPlaces); //gör en kopia på markedPlaces så att
+		markedPlaces.clear(); // den kan clearas och den kopian returneras
 		this.repaint();
 
-		return removedTriangles;
+		return removedPlaces;
 	}
 	
 	public void unMarkAllTriangles(){
-		for (TriangleObject triangle : allTriangles) {
-			triangle.setMarked(false);
+		for (Place place : allPlaces) {
+			place.setMarked(false);
 		}
+
+		// TODO: måste ta bort även från listan marked places
 		
 		this.repaint();
 	}
 
 	public void unMark() {
 		
-		for (TriangleObject triangle : markedTriangles) {
-			triangle.setMarked(false);
+		for (Place place : markedPlaces) {
+			place.setMarked(false);
 		}
+
+		// TODO: måste ta bort även från listan marked places
 //				markedTriangles.clear(); //För att min funktion catagoryLyss i main
 		// skulle fungera var jag tvungen att blocka denna
 		// Jag vet att du sa att den fuckar upp saker, men
@@ -107,16 +109,16 @@ public class KartPanel extends JPanel {
 		this.repaint();
 	}
 
-	public void mark(TriangleObject triangle) {
-		triangle.setMarked(true);
-		allTriangles.add(triangle);
-		markedTriangles.add(triangle);
+	public void mark(Place place) {
+		place.setMarked(true);
+		allPlaces.add(place);
+		markedPlaces.add(place);
 		this.repaint();
 	}
 
 	public void hideTriangle() {
-		for (TriangleObject triangle : markedTriangles) {
-			triangle.setVisible(false);
+		for (Place place : markedPlaces) {
+			place.setVisible(false);
 		}
 //		this.unMark();
 		this.repaint();
@@ -124,12 +126,12 @@ public class KartPanel extends JPanel {
 
 	public void hideCatTriangle(Category c) {
 
-		for (TriangleObject triangle : allTriangles) {
+		for (Place place : allPlaces) {
 
-			if (c.getColor().equals(triangle.col)) {
-				triangle.setVisible(false);
+			if (place.getCategory() == c) {   // if (c.getColor().equals(place.col)) {
+				place.setVisible(false);
 				System.out.println("Slutet på for-loopen");
-				markedTriangles.add(triangle);
+				markedPlaces.add(place);
 				//Göm trianglarna i catTriangle
 				//Rensa listan
 			}
@@ -140,9 +142,9 @@ public class KartPanel extends JPanel {
 	}
 
 	public void showTriangle(Category c) {
-		for (TriangleObject triangle : markedTriangles) {
-			if (c.getColor() == triangle.col) {
-				triangle.setVisible(true);
+		for (Place place : markedPlaces) {
+			if (c == place.getCategory()) {
+				place.setVisible(true);
 			}
 		}
 		this.unMark();
