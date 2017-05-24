@@ -17,6 +17,7 @@ public class KartPanel extends JPanel {
 	ImageIcon bild;
 	int scale = 1;
 
+	//Ändrade till en lista istället för HashMap för de markerade trianglarna
 	private List<TriangleObject> markedTriangles = new ArrayList<>();
 
 	public KartPanel(String filnamn) {
@@ -77,8 +78,8 @@ public class KartPanel extends JPanel {
 		for (TriangleObject triangle : markedTriangles) {
 			this.remove(triangle);
 		}
-		List<TriangleObject> removedTriangles = new ArrayList<>(markedTriangles);
-		markedTriangles.clear();
+		List<TriangleObject> removedTriangles = new ArrayList<>(markedTriangles); //gör en kompia på markedTriangles så att
+		markedTriangles.clear();                                        // den kan clearas och den kopian returneras
 		this.repaint();
 
 		return removedTriangles;

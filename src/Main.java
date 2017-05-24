@@ -9,12 +9,10 @@ import java.util.*;
 import java.util.List;
 
 
-
 /*
 
 KRITISKT
-* [x] om plats döljs ska den även avmarkeras
-* [x] om plats söks på namn ska den markeras så det går att dölja den direkt
+* [ ] huruvida triangel är markerad eller inte är funktionalitet som ska bo i platsen!
 * [ ] användaren ska kunna söka på koordinater
     * [ ] denna sökruta ska kontrollera att input är numerisk
     * [ ] annars typ samma som sökning på namn?
@@ -24,7 +22,6 @@ KRITISKT
 
 STRUNTSAKER
 * [ ] annan färg för att markera svarta platser? (ifsats för att sätta till vit kant om none)
-* [x] filväljaren ska vara inställd på alla filer när användaren laddar platser
 
  */
 
@@ -154,10 +151,10 @@ public class Main extends JFrame {
 
 	class RemoveLyss implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			List<TriangleObject> removedTriangles = fv.removeAllMarked();
+			List<TriangleObject> removedTriangles = fv.removeAllMarked(); //Hämtar listan på borttagna trianglar
 
 			for (TriangleObject triangle : removedTriangles) {
-				removePlace(triangle.getPlace());
+				removePlace(triangle.getPlace());   //Anropar removePlace-metoden och skickar med tringelns Place
 			}
 		}
 	}
@@ -400,7 +397,13 @@ public class Main extends JFrame {
 
 	class CoordinatesLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
+			CoordinatesForm coordniatesForm = new CoordinatesForm();
+			try {
 
+
+			} catch (NumberFormatException e) {
+
+			}
 		}
 	}
 
