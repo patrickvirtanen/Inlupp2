@@ -11,4 +11,12 @@ Described,Underground,783,493,test igen,aaaa
 Described,Underground,200,281,matilda,det är mitt namn
 Named,None,284,156,wkkk
 Named,Train,426,77,hehehe
-Named,Bus,442,200,asdf
+Named,Bus,441,200,asd
+Named,Train,442,200,asdf
+Named,Bus,443,200,asd
+Named,Underground,444,200,asdf
+Named,Bus,445,200,asd
+Named,Bus,442,201,asdf
+Named,Train,442,202,asd
+Named,Bus,442,203,asdf
+Named,Bus,442,204,asd

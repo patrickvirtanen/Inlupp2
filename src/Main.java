@@ -11,16 +11,16 @@ import java.util.List;
 /*
 
 KRITISKT
-* [ ] huruvida triangel är markerad eller inte är funktionalitet som ska bo i platsen!
+* [X] huruvida triangel är markerad eller inte är funktionalitet som ska bo i platsen!
 * [ ] användaren ska kunna söka på koordinater
-    * [ ] denna sökruta ska kontrollera att input är numerisk
+    * [X] denna sökruta ska kontrollera att input är numerisk
     * [ ] annars typ samma som sökning på namn?
 * [ ] felmeddelande ska visas om plats redan finns på position
-* [ ] knappen hide category ska gömma alla platser som hör till vald kategori
+* [X] knappen hide category ska gömma alla platser som hör till vald kategori
 * [X] när kategori väljs i listan ska platser som hör till den kategorin visas
 
 STRUNTSAKER
-* [ ] annan färg för att markera svarta platser? (ifsats för att sätta till vit kant om none)
+* [X] annan färg för att markera svarta platser? (ifsats för att sätta till vit kant om none)
 
  */
 
@@ -218,9 +218,9 @@ public class Main extends JFrame {
 
 	class HideLyss implements ActionListener {
 		public void actionPerformed(ActionEvent ave) {
-			fv.hideTriangle();
 			list.clearSelection();
-		
+			fv.hideTriangle();
+
 		}
 	}
 	
@@ -237,18 +237,17 @@ public class Main extends JFrame {
 	
 	class HideCatLyss implements ActionListener {
 		public void actionPerformed(ActionEvent ave) {
+
 			Category c = list.getSelectedValue();
-			//select all triangles for c
-			//Hide those triangles
+
+			Set<Place> places = categoryPlaces.get(c);
 
 			if(c == null) {
-				fv.hideCatTriangle(Category.None);
-				return;
+				places = categoryPlaces.get(Category.None);
 			}
 
-			fv.hideCatTriangle(c);
+			fv.hideCatTriangle(places);
 			list.clearSelection();
-
 		}
 	}
 	
@@ -301,23 +300,8 @@ public class Main extends JFrame {
 	class CategoryLyss extends MouseAdapter {
 		public void mouseClicked(MouseEvent e) {
 			Category c = list.getSelectedValue();
-			fv.showTriangle(c); 
-			Map<Category, List<Place>> categoryShow = new HashMap<>();
-				
-			for(Map.Entry<String,List<Place>> entry : placePerName.entrySet()){
-//			    System.out.printf(""+entry.getKey());
-			for(Map.Entry<Category,Set<Place>> entryCat : categoryPlaces.entrySet()){
-//			    System.out.printf(""+entry.getKey());
-				if(c.equals(entryCat.getKey())){
-				categoryShow.put(entryCat.getKey(), entry.getValue());
-				fv.showTriangle(c);
-				}
-			}
-			categoryShow.clear(); //Tömmer den temporära listan categoryShow.
-			
-			}
-
-			
+			Set<Place> places = categoryPlaces.get(c);
+			fv.showTriangle(places);
 		}
 	}
 
@@ -356,6 +340,13 @@ public class Main extends JFrame {
 				//TODO: felhantering för position
 				// TODO: if-sats ifall positionen redan finns, annars komma upp formulär
 				// anropa platskonstruktor efter formulär
+
+				Place aPlace = checkPosition(p);
+				if (aPlace != null) {
+					JOptionPane.showMessageDialog(null, "Already an existing place with those coordinates!",
+							"Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 
 				Category c = list.getSelectedValue();
 				if (c == null) {
@@ -454,13 +445,11 @@ public class Main extends JFrame {
 	class CoordinatesLyss implements ActionListener {
 		public void actionPerformed(ActionEvent ave) {
 			CoordinatesForm coordniatesForm = new CoordinatesForm();
-
 			while (true) {
 				int test = JOptionPane.showConfirmDialog(null, coordniatesForm, "New", JOptionPane.OK_CANCEL_OPTION);
 				if (test == 2 || test == -1) {
 					break;
 				}
-
 				try {
 					if (coordniatesForm.getXField() == null || coordniatesForm.getXField().equals("")) {
 						JOptionPane.showMessageDialog(null, "Choose your X-value", "Error", JOptionPane.ERROR_MESSAGE);
@@ -478,9 +467,13 @@ public class Main extends JFrame {
 
 					int xCoordinate = coordniatesForm.getCoordinateX();
 					int yCoordinate = coordniatesForm.getCoordinateY();
+					System.out.println(xCoordinate + ", " + yCoordinate);   //felsök
 
 					Position testPosition = new Position(xCoordinate, yCoordinate);
+
 					Place thePlace = checkPosition(testPosition);
+					System.out.println(thePlace);       //felsök
+
 
 					//TODO: den hittar inte platsen med den inskriva positionen !!!
 					if (thePlace == null) {
@@ -516,10 +509,7 @@ public class Main extends JFrame {
 
 	public Place checkPosition(Position testPos) {      //returnerar Positionsobjektet om det finns
 
-		//Obs igen att vi tänker oss att antalet platser är stort, så denna operation behöver också en lämplig
-		// datastruktur där man snabbt kan få fram en plats med hjälp av dess position (eller få veta att det inte
-		// finns någon plats där). Denna datastruktur behövs även vid skapande av platser, för att kontrollera
-		// att det inte redan finns en plats på den klickade positionen.
+		System.out.println("check " + testPos.getPosition());   //felsök
 
 		return placePerPosition.get(testPos);   //Returnerar null om det inte finns någon plats med den positionen
 	}

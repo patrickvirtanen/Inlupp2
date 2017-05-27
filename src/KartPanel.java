@@ -19,7 +19,7 @@ public class KartPanel extends JPanel {
 
 	//Ändrade till en lista istället för HashMap för de markerade trianglarna
 	private List<Place> markedPlaces = new ArrayList<>();
-	private List<Place> allPlaces = new ArrayList<>();
+	//private List<Place> allPlaces = new ArrayList<>();
 
 	public KartPanel(String filnamn) {
 		bild = new ImageIcon(filnamn);
@@ -38,7 +38,7 @@ public class KartPanel extends JPanel {
 		Position position = pla.getPosition();
 		pla.addMouseListener(new TriangelLyss());
 		add(pla);
-		allPlaces.add(pla);
+		//allPlaces.add(pla);
 		validate();
 		repaint();
 	}
@@ -85,7 +85,7 @@ public class KartPanel extends JPanel {
 		return removedPlaces;
 	}
 	
-	public void unMarkAllTriangles(){
+	/*public void unMarkAllTriangles(){
 		for (Place place : allPlaces) {
 			place.setMarked(false);
 		}
@@ -93,16 +93,15 @@ public class KartPanel extends JPanel {
 		// TODO: måste ta bort även från listan marked places
 		
 		this.repaint();
-	}
+	}*/
 
 	public void unMark() {
-		
 		for (Place place : markedPlaces) {
 			place.setMarked(false);
 		}
 
 		// TODO: måste ta bort även från listan marked places
-//				markedTriangles.clear(); //För att min funktion catagoryLyss i main
+		markedPlaces.clear(); //För att min funktion catagoryLyss i main
 		// skulle fungera var jag tvungen att blocka denna
 		// Jag vet att du sa att den fuckar upp saker, men
 		// Hittade ingen annan lösning :/
@@ -111,7 +110,7 @@ public class KartPanel extends JPanel {
 
 	public void mark(Place place) {
 		place.setMarked(true);
-		allPlaces.add(place);
+		//allPlaces.add(place);
 		markedPlaces.add(place);
 		this.repaint();
 	}
@@ -120,32 +119,22 @@ public class KartPanel extends JPanel {
 		for (Place place : markedPlaces) {
 			place.setVisible(false);
 		}
-//		this.unMark();
+		this.unMark();
 		this.repaint();
 	}
 
-	public void hideCatTriangle(Category c) {
-
-		for (Place place : allPlaces) {
-
-			if (place.getCategory() == c) {   // if (c.getColor().equals(place.col)) {
-				place.setVisible(false);
-				System.out.println("Slutet på for-loopen");
-				markedPlaces.add(place);
-				//Göm trianglarna i catTriangle
-				//Rensa listan
-			}
-	
+	public void hideCatTriangle(Set<Place> places) {
+		this.unMark();
+		for (Place place : places) {
+				this.mark(place);
 		}
-		this.unMarkAllTriangles();
+		this.hideTriangle();
 		this.repaint();
 	}
 
-	public void showTriangle(Category c) {
-		for (Place place : markedPlaces) {
-			if (c == place.getCategory()) {
-				place.setVisible(true);
-			}
+	public void showTriangle(Set<Place> places) {
+		for (Place place : places) {
+			place.setVisible(true);
 		}
 		this.unMark();
 		this.repaint();

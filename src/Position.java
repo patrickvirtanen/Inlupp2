@@ -26,4 +26,18 @@ public class Position extends JComponent {
 	public String getPosition() {
 		return x + "," + y;
 	}
+
+	@Override
+	public int hashCode() {
+		return x*10000 + y;
+	}
+
+	public boolean equals(Object p) {
+		if (p instanceof Position) {
+			if(x == ((Position) p).getPositionX() && y == ((Position) p).getPositionY()) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
