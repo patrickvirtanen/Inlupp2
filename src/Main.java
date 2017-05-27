@@ -12,10 +12,10 @@ import java.util.List;
 
 KRITISKT
 * [X] huruvida triangel är markerad eller inte är funktionalitet som ska bo i platsen!
-* [ ] användaren ska kunna söka på koordinater
+* [X] användaren ska kunna söka på koordinater
     * [X] denna sökruta ska kontrollera att input är numerisk
-    * [ ] annars typ samma som sökning på namn?
-* [ ] felmeddelande ska visas om plats redan finns på position
+    * [X] annars typ samma som sökning på namn?
+* [X] felmeddelande ska visas om plats redan finns på position
 * [X] knappen hide category ska gömma alla platser som hör till vald kategori
 * [X] när kategori väljs i listan ska platser som hör till den kategorin visas
 
