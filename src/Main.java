@@ -52,7 +52,6 @@ public class Main extends JFrame {
 	// TODO: fylls inte denna i med värden?
 	private Map<Position, Place> placePerPosition = new HashMap<>();
 
-
 	//TODO: ha en datastruktur för att se markerade platser? Eller kolla det på något annat sätt?
 
 	private JPanel topPanel;
@@ -142,6 +141,8 @@ public class Main extends JFrame {
 		JButton hidecat = new JButton("Hide Category");
 		eastPanel.add(hidecat);
 		hidecat.addActionListener(new HideCatLyss());
+		
+		
 
 		setSize(1000, 500);
 		//pack();
@@ -223,18 +224,21 @@ public class Main extends JFrame {
 
 		}
 	}
-	
-	class ClickLyss extends MouseAdapter{
-		public void mouseClicked(MouseEvent e){
-			list.clearSelection();
-			//om e.getSource är lika med fv rensa JList
+
+	class ClickLyss extends MouseAdapter {
+		public void mouseClicked(MouseEvent e) {
+			KartPanel kp = (KartPanel)e.getSource();
+			if (fv.equals(kp)) {
+				list.clearSelection();
+				//om e.getSource är lika med fv rensa JList
+		}
 		}
 	}
-	public void clickedPic(){
-		//Om man klickar på bilden rensa JList
-		
-	}
-	
+	//	public void clickedPic(){
+	//		//Om man klickar på bilden rensa JList
+	//		
+	//	}
+
 	class HideCatLyss implements ActionListener {
 		public void actionPerformed(ActionEvent ave) {
 
@@ -242,7 +246,7 @@ public class Main extends JFrame {
 
 			Set<Place> places = categoryPlaces.get(c);
 
-			if(c == null) {
+			if (c == null) {
 				places = categoryPlaces.get(Category.None);
 			}
 
@@ -250,7 +254,6 @@ public class Main extends JFrame {
 			list.clearSelection();
 		}
 	}
-	
 
 	//TODO: metod för att lägga till ny plats i alla datastrukturer som krävs
 	private void addPlace(Place p) {
@@ -275,6 +278,7 @@ public class Main extends JFrame {
 
 		//Platserna är förändrade i jämförelse med den sparade filen (finns nya platser)
 		changed = true;
+		
 
 	}
 
@@ -343,8 +347,10 @@ public class Main extends JFrame {
 
 				Place aPlace = checkPosition(p);
 				if (aPlace != null) {
-					JOptionPane.showMessageDialog(null, "Already an existing place with those coordinates!",
-							"Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Already an existing place with those coordinates!", "Error",
+						JOptionPane.ERROR_MESSAGE);
+					buttonGroup.clearSelection();
+					list.clearSelection();
 					return;
 				}
 
@@ -411,6 +417,7 @@ public class Main extends JFrame {
 
 				buttonGroup.clearSelection();
 				list.clearSelection();
+				
 			}
 		}
 	}
@@ -458,27 +465,28 @@ public class Main extends JFrame {
 						JOptionPane.showMessageDialog(null, "Choose your Y-value", "Error", JOptionPane.ERROR_MESSAGE);
 						continue;
 					} else if (coordniatesForm.getCoordinateX() < 0) {
-						JOptionPane.showMessageDialog(null, "Your X-value can't be less than zero", "Error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Your X-value can't be less than zero", "Error",
+							JOptionPane.ERROR_MESSAGE);
 						continue;
 					} else if (coordniatesForm.getCoordinateY() < 0) {
-						JOptionPane.showMessageDialog(null, "Your Y-value can't be less than zero", "Error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Your Y-value can't be less than zero", "Error",
+							JOptionPane.ERROR_MESSAGE);
 						continue;
 					}
 
 					int xCoordinate = coordniatesForm.getCoordinateX();
 					int yCoordinate = coordniatesForm.getCoordinateY();
-					System.out.println(xCoordinate + ", " + yCoordinate);   //felsök
+					System.out.println(xCoordinate + ", " + yCoordinate); //felsök
 
 					Position testPosition = new Position(xCoordinate, yCoordinate);
 
 					Place thePlace = checkPosition(testPosition);
-					System.out.println(thePlace);       //felsök
-
+					System.out.println(thePlace); //felsök
 
 					//TODO: den hittar inte platsen med den inskriva positionen !!!
 					if (thePlace == null) {
-						JOptionPane.showMessageDialog(null, "No existing place with those coordinates!",
-								"Error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "No existing place with those coordinates!", "Error",
+							JOptionPane.ERROR_MESSAGE);
 						break;
 					} else {
 						fv.unMark();
@@ -487,15 +495,16 @@ public class Main extends JFrame {
 						thePlace.setVisible(true);
 						fv.mark(thePlace);
 
-						/*for (TriangleObject triangle: samePosition) {
-							//anropa metod som visar triangeln med samma namn och position
-							if (thePlace.getPosition().equals(testPosition)) {
-								triangle.setVisible(true);
-
-								//anropa metod som markerar platsen
-								fv.mark(triangle);
-							}
-						}*/
+						/*
+						 * for (TriangleObject triangle: samePosition) {
+						 * //anropa metod som visar triangeln med samma namn och
+						 * position if
+						 * (thePlace.getPosition().equals(testPosition)) {
+						 * triangle.setVisible(true);
+						 * 
+						 * //anropa metod som markerar platsen
+						 * fv.mark(triangle); } }
+						 */
 						break;
 					}
 
@@ -507,11 +516,11 @@ public class Main extends JFrame {
 		}
 	}
 
-	public Place checkPosition(Position testPos) {      //returnerar Positionsobjektet om det finns
+	public Place checkPosition(Position testPos) { //returnerar Positionsobjektet om det finns
 
-		System.out.println("check " + testPos.getPosition());   //felsök
+		System.out.println("check " + testPos.getPosition()); //felsök
 
-		return placePerPosition.get(testPos);   //Returnerar null om det inte finns någon plats med den positionen
+		return placePerPosition.get(testPos); //Returnerar null om det inte finns någon plats med den positionen
 	}
 
 	class LoadLyss implements ActionListener {
